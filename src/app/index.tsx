@@ -1,66 +1,57 @@
 import {
-  Button,
   FlatList,
-  Image,
-  ImageSourcePropType,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
   View
 } from 'react-native'
-import { Colors, Screens } from '../shared/tookens'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useEffect, useRef, useState } from 'react'
-import Animated, {
-  Extrapolate,
-  interpolate,
-  interpolateColor,
-  useAnimatedScrollHandler,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming
-} from 'react-native-reanimated'
+import { useCallback, useMemo, useRef, useState } from 'react'
+import { useSharedValue } from 'react-native-reanimated'
+import { welcomeData } from '../widget/welcome/data'
+import WelcomePageList from '../widget/welcome/page-list'
+import WelcomeDoteBox from '../widget/welcome/dote'
+import WelcomeButton from '../widget/welcome/button'
+import WelcomeBackgroundImage from '../widget/welcome/welcomeBackgroundImage'
+import { router } from 'expo-router'
+import { Screens } from '../shared/tookens'
+import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
+import { BottomSheetModalMethods } from '@gorhom/bottom-sheet/lib/typescript/types'
+import { BlurView } from 'expo-blur'
+import { TextInput } from 'react-native-gesture-handler'
 
-interface Idata {
-  id: number
-  title: string
-  desc: string
-  img?: ImageSourcePropType
-}
-
-const welcomeData = [
-  {
-    id: 1,
-    title: 'Envoy — Yuk tashish oson!',
-    desc: 'Yukingizni xavfsiz va tez yetkazamiz. Envoy yordamida yuk topshiring yoki haydovchi toping.',
-    img: require('../../src/assets/images/welcome-first.jpg')
-  },
-  {
-    id: 2,
-    title: 'Real vaqtda kuzatuv',
-    desc: 'Yukingiz qayerda ekanini xarita orqali kuzating.',
-    img: require('../../src/assets/images/welcome-second.jpg')
-  },
-  {
-    id: 3,
-    title: 'Pul ishlash imkoniyati',
-    desc: 'Haydovchi sifatida ro‘yxatdan o‘ting va yuk tashib daromad oling.',
-    img: require('../../src/assets/images/welcome-third.webp')
-  }
+const LANGS = [
+  { key: 'uz', label: "O'zbekcha (uz)" },
+  { key: 'ru', label: 'Русский (ru)' },
+  { key: 'kk', label: 'Қазақша (kk)' },
+  { key: 'ky', label: 'Кыргызча (ky)' },
+  { key: 'tg', label: 'Тоҷикӣ (tg)' },
+  { key: 'tk', label: 'Türkmençe (tk)' },
+  { key: 'tr', label: 'Türkçe (tr)' },
+  { key: 'zh', label: '中文 (zh)' },
+  { key: 'en', label: 'English (en)' }
 ]
 
 export default function WelcomePage () {
-  const insets = useSafeAreaInsets()
-  const [page, setPage] = useState<number>(0)
   const flatListRef = useRef<FlatList>(null)
+  const [page, setPage] = useState<number>(0)
+  const ScrollX = useSharedValue(0)
+  const sheetRef = useRef<BottomSheetModalMethods | null>(null)
 
-  const masofaniAniqlash = useRef({
-    viewAreaCoveragePercentThreshold: 50
-  }).current
+  const [selectedLang, setSelectedLang] = useState('uz')
+  const [query, setQuery] = useState('')
+  const snapPoints = useMemo(() => ['40%', '70%'], [])
 
-  const sahifaniAniqlash = useRef(({ viewableItems }: any) => {
-    if (viewableItems.length > 0) setPage(viewableItems[0].index)
-  }).current
+  const openSheet = useCallback(() => sheetRef.current?.present(), [])
+  const closeSheet = useCallback(() => sheetRef.current?.dismiss(), [])
+
+  const filterLangs = useMemo(() => {
+    const q = query.trim().toLowerCase()
+    if (!q) return LANGS
+    return LANGS.filter(
+      l => l.label.toLowerCase().includes(q) || l.key.toLowerCase().includes(q)
+    )
+  }, [query])
 
   const back = () => {
     if (page > 0) {
@@ -70,182 +61,180 @@ export default function WelcomePage () {
       })
     }
   }
-
   const next = () => {
     if (page < welcomeData.length - 1) {
       flatListRef.current?.scrollToIndex({
         index: page + 1,
         animated: true
       })
+    } else {
+      router.push('auth')
     }
   }
 
-  const renderItem = ({ item }: { item: Idata }) => {
-    return (
-      <View style={[styles.pages, { paddingTop: insets.top }]}>
-        <Image source={item.img} resizeMode='cover' style={styles.image} />
-        <Text style={styles.text}>{item.title}</Text>
-        <Text style={styles.text}>{item.desc}</Text>
-      </View>
-    )
+  const onSelectLang = (langKey: string) => {
+    setSelectedLang(langKey)
+    closeSheet()
   }
-  const backButtonWidth = useSharedValue(0)
-  const backButtonOpacity = useSharedValue(0)
-  const ScrollX = useSharedValue(0)
-
-  useEffect(() => {
-    backButtonWidth.value = withTiming(page === 0 ? 0 : 55, { duration: 300 })
-    backButtonOpacity.value = withTiming(page === 0 ? 0 : 1, { duration: 200 })
-  }, [page])
-
-  const backButtonAnimatedStyle = useAnimatedStyle(() => ({
-    width: backButtonWidth.value,
-    opacity: backButtonOpacity.value
-  }))
-
-  const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
-
-  const scrollHandler = useAnimatedScrollHandler(e => {
-    ScrollX.value = e.contentOffset.x
-  })
 
   return (
     <View>
-      <Animated.FlatList
-        ref={flatListRef}
-        data={welcomeData}
-        renderItem={renderItem}
-        keyExtractor={item => item.id.toString()}
-        horizontal
-        pagingEnabled
-        viewabilityConfig={masofaniAniqlash}
-        onViewableItemsChanged={sahifaniAniqlash}
-        onScroll={scrollHandler}
+      <WelcomePageList
+        flatListRef={flatListRef}
+        setPage={setPage}
+        ScrollX={ScrollX}
       />
+      <WelcomeDoteBox ScrollX={ScrollX} />
+      <WelcomeButton page={page} next={next} back={back} />
+      <WelcomeBackgroundImage activePage={page} welcomeScrollX={ScrollX} />
 
-      <View style={styles.boxButton}>
-        <Pressable onPress={next} style={styles.boshlashBtn}>
-          <Text style={styles.boshlashBtnText}>Boshlash</Text>
+      <Pressable style={styles.langButton} onPress={openSheet}>
+        <Text style={{ color: '#fff', fontSize: 18, fontWeight: '600' }}>
+          {selectedLang.toUpperCase()}
+        </Text>
+      </Pressable>
 
-          <AnimatedPressable
-            onPress={back}
-            style={[styles.backBtn, backButtonAnimatedStyle]}
-          >
-            <Text style={{ color: '#fff' }}>@</Text>
-          </AnimatedPressable>
-        </Pressable>
-      </View>
-
-      <View style={styles.doteBox}>
-        {welcomeData?.map((_, index) => {
-          const animatedStyle = useAnimatedStyle(() => {
-            const a = [
-              (index - 1) * Screens.width,
-              index * Screens.width,
-              (index + 1) * Screens.width
-            ]
-
-            const width = interpolate(
-              ScrollX.value,
-              a,
-              [30, Screens.width * 0.6, 30],
-              Extrapolate.CLAMP
-            )
-
-            const backgroundColor = interpolateColor(ScrollX.value, a, [
-              '#333',
-              Colors.primary,
-              '#333'
-            ])
-
-            return { width, backgroundColor }
-          })
-
-          return (
-            <Animated.View key={index} style={[styles.dote, animatedStyle]} />
-          )
-        })}
-      </View>
+      <BottomSheetModal
+        ref={sheetRef}
+        snapPoints={snapPoints}
+        index={0}
+        enablePanDownToClose
+        backgroundStyle={{
+          backgroundColor: Platform.OS === 'ios' ? '#000' : 'rgba(34,34,34,0.9)'
+        }}
+      >
+        {Platform.OS === 'ios' ? (
+          <BlurView intensity={50} tint='dark' style={styles.blurContainer}>
+            <SheetContent
+              query={query}
+              setQuery={setQuery}
+              filterLangs={filterLangs}
+              selectedLang={selectedLang}
+              onSelectLang={onSelectLang}
+            />
+          </BlurView>
+        ) : (
+          <View>
+            <SheetContent
+              query={query}
+              setQuery={setQuery}
+              filterLangs={filterLangs}
+              selectedLang={selectedLang}
+              onSelectLang={onSelectLang}
+            />
+          </View>
+        )}
+      </BottomSheetModal>
     </View>
   )
 }
 
+function SheetContent ({
+  query,
+  setQuery,
+  filterLangs,
+  selectedLang,
+  onSelectLang
+}: any) {
+  return (
+    <BottomSheetView style={styles.sheetInner}>
+      <TextInput
+        value={query}
+        onChangeText={setQuery}
+        placeholder='Tilni qidirish...'
+        placeholderTextColor='#999'
+        style={styles.searchInput}
+      />
+
+      <FlatList
+        data={filterLangs}
+        keyExtractor={item => item.key}
+        style={styles.list}
+        contentContainerStyle={{ paddingBottom: 40 }}
+        renderItem={({ item }) => {
+          const isActive = item.key === selectedLang
+          return (
+            <Pressable
+              style={[styles.langRow, isActive && styles.langRowActive]}
+              onPress={() => onSelectLang(item.key)}
+            >
+              <Text style={[styles.langText && styles.langTextActive]}>
+                {item.label}
+              </Text>
+            </Pressable>
+          )
+        }}
+      />
+    </BottomSheetView>
+  )
+}
+
 const styles = StyleSheet.create({
-  pages: {
-    width: Screens.width,
-    height: Screens.height,
+  langButton: {
+    position: 'absolute',
+    top: Screens.height * 0.08,
+    left: Screens.width * 0.07,
+    backgroundColor: '#33333387',
+    height: 50,
+    width: 50,
+    borderRadius: 12,
+    justifyContent: 'center',
     alignItems: 'center'
   },
 
-  image: {
-    width: Screens.width * 0.9,
-    height: Screens.height * 0.55,
-    borderRadius: 20
+  blurContainer: {
+    flex: 1,
+    borderRadius: 20,
+    overflow: 'hidden',
+    backgroundColor: 'rgba(34,34,34,0.3)'
   },
 
-  text: {
-    fontSize: 20,
-    color: '#666',
-    fontWeight: 'bold',
+  androidContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(34,34,34,0.9)',
+    borderRadius: 20,
+    overflow: 'hidden'
+  },
+
+  sheetInner: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingTop: 10
+  },
+
+  searchInput: {
+    backgroundColor: '#333',
+    color: '#fff',
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    marginBottom: 10,
+    fontSize: 16
+  },
+
+  list: {
     marginTop: 10
   },
 
-  boxButton: {
-    width: Screens.width,
-    height: Screens.height * 0.12,
-    position: 'absolute',
-    bottom: 0,
-    backgroundColor: '#1d1d1d',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center'
+  langRow: {
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    backgroundColor: '#222',
+    marginBottom: 6
   },
 
-  boshlashBtn: {
-    width: Screens.width,
-    height: Screens.height * 0.075,
-    backgroundColor: Colors.primary,
-    borderRadius: 25,
-    alignItems: 'center',
-    justifyContent: 'center'
+  langRowActive: {
+    backgroundColor: '#444'
   },
 
-  boshlashBtnText: {
+  langText: {
+    color: '#ccc',
+    fontSize: 16
+  },
+
+  langTextActive: {
     color: '#fff',
-    fontSize: 20,
-    fontWeight: '500',
-    letterSpacing: 2
-  },
-
-  backBtn: {
-    position: 'absolute',
-    left: 5,
-    backgroundColor: 'red',
-    width: 60,
-    height: Screens.height * 0.08 - 10,
-    borderTopLeftRadius: 20,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 7,
-    borderTopRightRadius: 7,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-
-  doteBox: {
-    width: Screens.width,
-    height: 30,
-    flexDirection: 'row',
-    position: 'absolute',
-    alignItems: 'center',
-    justifyContent: 'center',
-    top: Screens.height * 0.8,
-    zIndex: 10,
-    gap: 10
-  },
-
-  dote: {
-    height: 5,
-    borderRadius: 30
+    fontWeight: 'bold'
   }
 })
