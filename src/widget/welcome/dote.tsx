@@ -6,7 +6,7 @@ import Animated, {
   interpolateColor,
   useAnimatedStyle
 } from 'react-native-reanimated'
-import { Colors, Screens } from '../../../src/shared/tookens'
+import { Colors, Screens } from '../../shared/tokens'
 import { welcomeData } from './data'
 export default function WelcomeDoteBox ({ ScrollX }: any) {
   return (

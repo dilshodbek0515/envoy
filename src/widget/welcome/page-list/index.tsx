@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { welcomeStyle } from '../../style'
 import { RefObject, useRef } from 'react'
 import { welcomeData } from '../data'
-import { Spacing } from '../../../shared/tookens'
+import { Spacing } from '../../../shared/tokens'
 
 interface Idata {
   id: number

@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { Colors, Screens } from '../../src/shared/tookens'
+import { Colors, Screens } from '../shared/tokens'
 
 export const welcomeStyle = StyleSheet.create({
   pages: {

@@ -8,17 +8,17 @@ import {
 } from 'react-native'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { useSharedValue } from 'react-native-reanimated'
-import { welcomeData } from '../widget/welcome/data'
-import WelcomePageList from '../widget/welcome/page-list'
-import WelcomeDoteBox from '../widget/welcome/dote'
-import WelcomeButton from '../widget/welcome/button'
 import WelcomeBackgroundImage from '../widget/welcome/welcomeBackgroundImage'
 import { router } from 'expo-router'
-import { Screens } from '../shared/tookens'
+import { Screens } from '../shared/tokens'
 import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
 import { BottomSheetModalMethods } from '@gorhom/bottom-sheet/lib/typescript/types'
 import { BlurView } from 'expo-blur'
 import { TextInput } from 'react-native-gesture-handler'
+import WelcomePageList from '@/widget/welcome/page-list'
+import WelcomeDoteBox from '@/widget/welcome/dote'
+import WelcomeButton from '@/widget/welcome/button'
+import { welcomeData } from '@/widget/welcome/data'
 
 const LANGS = [
   { key: 'uz', label: "O'zbekcha (uz)" },
@@ -172,7 +172,7 @@ function SheetContent ({
 const styles = StyleSheet.create({
   langButton: {
     position: 'absolute',
-    top: Screens.height * 0.08,
+    top: Screens.height * 0.07,
     left: Screens.width * 0.07,
     backgroundColor: '#33333387',
     height: 50,

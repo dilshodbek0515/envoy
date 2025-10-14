@@ -21,3 +21,10 @@ export const Colors = {
   yellow: '#ffbd59',
   red: '#ff0000'
 }
+
+export const Fonts = {
+  regular: 'Inter-Regular',
+  medium: 'Inter-Medium',
+  semiBold: 'Inter-SemiBold',
+  bold: 'Inter-Bold'
+}
