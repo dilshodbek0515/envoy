@@ -87,5 +87,6 @@ export const welcomeStyle = StyleSheet.create({
   dote: {
     height: 5,
     borderRadius: 20
-  }
+  },
+
 })

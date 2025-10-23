@@ -1,4 +1,59 @@
-export const lightColors = {
+export interface IColorShades {
+  '08': string
+  '06': string
+  '04': string
+  '02': string
+}
+
+export interface IThemeColors {
+  primary: string
+  pageBackground: string
+  Boxbackground: string
+  textPrimary: string
+  textSecondary: string
+  green: string
+  yellow: string
+  borderColor: string
+
+  // shade versiyalar
+  primary08: string
+  primary06: string
+  primary04: string
+  primary02: string
+
+  textPrimary08: string
+  textPrimary06: string
+  textPrimary04: string
+  textPrimary02: string
+
+  textSecondary08: string
+  textSecondary06: string
+  textSecondary04: string
+  textSecondary02: string
+
+  green08: string
+  green06: string
+  green04: string
+  green02: string
+
+  yellow08: string
+  yellow06: string
+  yellow04: string
+  yellow02: string
+
+  Boxbackground08: string
+  Boxbackground06: string
+  Boxbackground04: string
+  Boxbackground02: string
+
+  borderColor08: string
+  borderColor06: string
+  borderColor04: string
+  borderColor02: string
+}
+
+// 👇 shu interfeysni ishlatib light va dark ranglarni tiplaymiz
+export const lightColors: IThemeColors = {
   primary: '#007fff',
   pageBackground: '#ffffff',
   Boxbackground: '#eee',
@@ -8,11 +63,10 @@ export const lightColors = {
   yellow: '#FACC15',
   borderColor: '#999999',
 
-  // Light → oq tomonga ochilib boradi
-  primary08: '#007fff', // 100%
-  primary06: '#339fff', // 80%
-  primary04: '#66bfff', // 60%
-  primary02: '#99dfff', // 40% (oq tomonga)
+  primary08: '#007fff',
+  primary06: '#339fff',
+  primary04: '#66bfff',
+  primary02: '#99dfff',
 
   textPrimary08: '#1F2937',
   textPrimary06: '#4A5568',
@@ -45,7 +99,7 @@ export const lightColors = {
   borderColor02: '#E6E6E6'
 }
 
-export const darkColors = {
+export const darkColors: IThemeColors = {
   primary: '#00BEFF',
   pageBackground: '#111111',
   Boxbackground: '#333333',
@@ -55,11 +109,10 @@ export const darkColors = {
   yellow: '#ffbd59',
   borderColor: '#555555',
 
-  // Dark → qora tomonga qorayib boradi
-  primary08: '#00BEFF', // 100%
-  primary06: '#0099CC', // 80%
-  primary04: '#006680', // 60%
-  primary02: '#003344', // 40% (qora tomonga)
+  primary08: '#00BEFF',
+  primary06: '#0099CC',
+  primary04: '#006680',
+  primary02: '#003344',
 
   textPrimary08: '#ffffff',
   textPrimary06: '#BFBFBF',

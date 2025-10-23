@@ -17,7 +17,7 @@ export default function RootLayout () {
   })
 
   useEffect(() => {
-    if (load || load) SplashScreen.hideAsync
+    if (load || load) SplashScreen.hideAsync()
   }, [load, load])
 
   if (!load && !error) return null

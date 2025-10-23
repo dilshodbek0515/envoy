@@ -4,7 +4,7 @@ import { Text, TextProps } from 'react-native'
 
 type TFont = keyof typeof Fonts
 
-// type a = 'regular' | 'medium' | 'semiBold' | 'bold'
+
 
 interface AppTextProps extends TextProps {
   variant?: TFont
