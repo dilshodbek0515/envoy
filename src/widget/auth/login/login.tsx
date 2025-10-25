@@ -1,6 +1,6 @@
-import { Button, StyleSheet, View } from 'react-native'
-import React from 'react'
-import { Spacing } from '@/shared/tokens'
+import { Button, Pressable, StyleSheet, View } from 'react-native'
+import React, { useEffect } from 'react'
+import { Screens, Spacing } from '@/shared/tokens'
 import useThemeColor from '@/theme/useTheme'
 import { IThemeColors } from '@/theme/color'
 import { Controller, useForm } from 'react-hook-form'
@@ -8,8 +8,13 @@ import { unMask } from 'react-native-mask-text'
 import AppPhoneInput from '@/components/Input/phoneInput'
 import AppInput from '@/components/Input/passwordInput'
 import axios from 'axios'
+import AppText from '@/components/text'
 
-const Login = () => {
+interface LoginProps {
+  onSubmitRef: React.MutableRefObject<() => void>
+}
+
+const Login = ({ onSubmitRef }: LoginProps) => {
   const Colors = useThemeColor()
 
   const {
@@ -43,6 +48,10 @@ const Login = () => {
     }
   }
 
+  useEffect(() => {
+    onSubmitRef.current = handleSubmit(onSubmit)
+  }, [handleSubmit])
+
   return (
     <View
       style={{
@@ -67,10 +76,30 @@ const Login = () => {
         name='password'
         control={control}
         render={({ field: { onChange, value } }) => (
-          <AppInput onChangeText={onChange} value={value} label='Parol' />
+          <AppInput
+            onChangeText={onChange}
+            value={value}
+            label='Parol'
+            isPassword
+          />
         )}
       />
-      <Button title='submit' onPress={handleSubmit(onSubmit)} />
+
+      <Pressable
+        onPress={handleSubmit(onSubmit)}
+        style={{
+          backgroundColor: Colors.primary,
+          height: 55,
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: Screens.width - Spacing.horizontal * 2,
+          borderRadius: 20
+        }}
+      >
+        <AppText style={{ fontSize: 18, fontWeight: 600 }}>
+          Dasturga kirish
+        </AppText>
+      </Pressable>
     </View>
   )
 }
