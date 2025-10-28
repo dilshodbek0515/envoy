@@ -137,9 +137,15 @@ export default function Auth () {
       />
 
       <Pressable
-        onPress={() => (activePage === 0 ? loginSubmitRef : registerSubmitRef)}
+        onPress={() => {
+          if (activePage === 0) {
+            loginSubmitRef.current?.()
+          } else {
+            registerSubmitRef.current?.()
+          }
+        }}
         style={{
-          backgroundColor: Colors.borderColor,
+          backgroundColor: Colors.primary,
           height: 60,
           justifyContent: 'center',
           alignItems: 'center',

@@ -9,9 +9,9 @@ import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import Closed from '@/assets/icons/close'
 
 const AppPhoneInput = ({
-  label,
+  label = 'Telefon raqam',
   ...props
-}: MaskedTextInputProps & { label: string }) => {
+}: MaskedTextInputProps & { label?: string }) => {
   const Colors = useThemeColor()
   const [active, setActive] = useState(false)
   const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
@@ -122,7 +122,6 @@ const AppPhoneInput = ({
           style={[
             styles(Colors).eyeButton,
             {
-              borderLeftWidth: 1,
               borderColor: activeColor,
               marginVertical: 10
             },

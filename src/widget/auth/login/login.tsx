@@ -1,6 +1,6 @@
-import { Button, Pressable, StyleSheet, View } from 'react-native'
-import React, { useEffect } from 'react'
-import { Screens, Spacing } from '@/shared/tokens'
+import { StyleSheet, View } from 'react-native'
+import React, { useCallback } from 'react'
+import { Spacing } from '@/shared/tokens'
 import useThemeColor from '@/theme/useTheme'
 import { IThemeColors } from '@/theme/color'
 import { Controller, useForm } from 'react-hook-form'
@@ -9,6 +9,8 @@ import AppPhoneInput from '@/components/Input/phoneInput'
 import AppInput from '@/components/Input/passwordInput'
 import axios from 'axios'
 import AppText from '@/components/text'
+import { router } from 'expo-router'
+import { AppRoutes } from '@/constants/routes'
 
 interface LoginProps {
   onSubmitRef: React.MutableRefObject<() => void>
@@ -28,7 +30,7 @@ const Login = ({ onSubmitRef }: LoginProps) => {
     }
   })
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = useCallback(async (data: any) => {
     const unformatted = '+998' + unMask(data.phone)
     const payload = {
       phone_number: unformatted,
@@ -42,15 +44,13 @@ const Login = ({ onSubmitRef }: LoginProps) => {
         'http://my.example.uz.webcoder.uz/user/login/',
         payload
       )
-      console.log(data)
+      console.log('Login muvaffaqiyatli', data)
     } catch (error) {
       console.log(error)
     }
-  }
+  }, [])
 
-  useEffect(() => {
-    onSubmitRef.current = handleSubmit(onSubmit)
-  }, [handleSubmit])
+  onSubmitRef.current = handleSubmit(onSubmit)
 
   return (
     <View
@@ -85,21 +85,12 @@ const Login = ({ onSubmitRef }: LoginProps) => {
         )}
       />
 
-      <Pressable
-        onPress={handleSubmit(onSubmit)}
-        style={{
-          backgroundColor: Colors.primary,
-          height: 55,
-          justifyContent: 'center',
-          alignItems: 'center',
-          width: Screens.width - Spacing.horizontal * 2,
-          borderRadius: 20
-        }}
+      <AppText
+        onPress={() => router.push(AppRoutes.auth.resetPassword.checkPhone)}
+        style={{ color: Colors.primary, textAlign: 'right' }}
       >
-        <AppText style={{ fontSize: 18, fontWeight: 600 }}>
-          Dasturga kirish
-        </AppText>
-      </Pressable>
+        Parol esdan chiqdimi ?
+      </AppText>
     </View>
   )
 }

@@ -17,7 +17,7 @@ import Closed from '@/assets/icons/close'
 
 interface IProps {
   label: string
-  isPassword: boolean
+  isPassword?: boolean
 }
 
 const AppInput = ({ label, isPassword, ...props }: TextInputProps & IProps) => {

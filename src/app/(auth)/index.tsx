@@ -8,9 +8,7 @@ import {
 } from 'react-native'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { useSharedValue } from 'react-native-reanimated'
-import WelcomeBackgroundImage from '../widget/welcome/welcomeBackgroundImage'
 import { router } from 'expo-router'
-import { Screens } from '../shared/tokens'
 import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
 import { BottomSheetModalMethods } from '@gorhom/bottom-sheet/lib/typescript/types'
 import { BlurView } from 'expo-blur'
@@ -19,6 +17,9 @@ import WelcomePageList from '@/widget/welcome/page-list'
 import WelcomeDoteBox from '@/widget/welcome/dote'
 import WelcomeButton from '@/widget/welcome/button'
 import { welcomeData } from '@/widget/welcome/data'
+import { AppRoutes } from '@/constants/routes'
+import { Screens } from '@/shared/tokens'
+import WelcomeBackgroundImage from '@/widget/welcome/welcomeBackgroundImage'
 
 const LANGS = [
   { key: 'uz', label: "O'zbekcha (uz)" },
@@ -61,6 +62,7 @@ export default function WelcomePage () {
       })
     }
   }
+
   const next = () => {
     if (page < welcomeData.length - 1) {
       flatListRef.current?.scrollToIndex({
@@ -68,7 +70,7 @@ export default function WelcomePage () {
         animated: true
       })
     } else {
-      router.push('auth')
+      router.push(AppRoutes.auth.auth)
     }
   }
 
