@@ -2,12 +2,10 @@ import {
   ActivityIndicator,
   Button,
   Keyboard,
-  StyleSheet,
-  Text,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PageHeader from '@/components/header/PageHeader'
 import { Controller, useForm } from 'react-hook-form'
 import AppPhoneInput from '@/components/Input/phoneInput'
@@ -21,8 +19,9 @@ import axios from 'axios'
 import useThemeColor from '@/theme/useTheme'
 import { router } from 'expo-router'
 import { AppRoutes } from '@/constants/routes'
-
-export const URL = 'https://envoy.odamqosh.com'
+import { URL } from '@/shared/api'
+import { sendSmsAtom } from '@/service/user/send-sms/constroller'
+import { checkPhoneAtom } from '@/service/user/check-phone/controller'
 
 const phoneSchema = z.object({
   phone: z.string().refine(value => value.length >= 12, {
@@ -35,10 +34,10 @@ export const resetPasswordPhone = atom('')
 export const resetPasswordSms = atom('')
 
 const ResetPasswordCheckPhone = () => {
-  const [phone, setPhone] = useAtom(resetPasswordPhone)
+  const [phoneState, setPhone] = useAtom(checkPhoneAtom)
   const setSms = useSetAtom(resetPasswordSms)
-  const [isRegister, setIsRegister] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [smsState, sendSmsAction] = useAtom(sendSmsAtom)
   const Colors = useThemeColor()
   const {
     control,
@@ -53,39 +52,28 @@ const ResetPasswordCheckPhone = () => {
 
   const onSubmit = async (data: any) => {
     const unFormatted = '+998' + unMask(data.phone)
-    setPhone(unFormatted)
-    const exists = await checkPhone(unFormatted)
+    const exists = await setPhone(unFormatted)
     if (exists) {
-      await sendSms(unFormatted)
-      router.replace(AppRoutes.auth.resetPassword.checkSmsCode)
+      const code = await sendSmsAction(unFormatted)
+      if (code) {
+        setSms(code)
+        console.log('sms code', code)
+      }
     }
   }
 
-  const checkPhone = async (phone: string) => {
-    setIsRegister(null)
-    setIsLoading(true)
-    try {
-      const { data } = await axios.post(URL + '/user/check-phone/', { phone })
-      setIsRegister(data.exists)
-      return data.exists
-    } catch (error) {
-      return null
-    } finally {
-      setIsLoading(false)
+  useEffect(() => {
+    if (phoneState.exists) {
+      router.push(AppRoutes.auth.resetPassword.checkSmsCode)
     }
-  }
+  }, [phoneState.exists])
 
-  const sendSms = async (phone: string) => {
-    try {
-      const { data } = await axios.post(URL + '/user/send-sms/', {
-        phone
-      })
-      console.log(data)
-      setSms(data.code)
-    } catch (error) {
-      console.log(error)
+  useEffect(() => {
+    if (smsState.code) {
+      setSms(smsState.code)
+      console.log(smsState.code)
     }
-  }
+  }, [smsState.code])
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -110,13 +98,11 @@ const ResetPasswordCheckPhone = () => {
             error={'Telefon raqamni kiriting'}
             isVisable={errors.phone?.message}
           />
-
-          {isRegister === false && (
-            <ErrorText
-              error={"Siz ro'yxatdan o'tmagansiz"}
-              isVisable={isRegister === false ? true : false}
-            />
-          )}
+          {/* 
+          <ErrorText
+            error={"Siz ro'yxatdan o'tmagansiz"}
+            isVisable={phoneState === false ? false : true}
+          /> */}
 
           {!isLoading ? (
             <Button title='Davom etish' onPress={handleSubmit(onSubmit)} />
@@ -130,5 +116,3 @@ const ResetPasswordCheckPhone = () => {
 }
 
 export default ResetPasswordCheckPhone
-
-const styles = StyleSheet.create({})

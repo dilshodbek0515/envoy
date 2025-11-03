@@ -38,7 +38,7 @@ export default function WelcomePage () {
   const [page, setPage] = useState<number>(0)
   const ScrollX = useSharedValue(0)
   const sheetRef = useRef<BottomSheetModalMethods | null>(null)
-
+  
   const [selectedLang, setSelectedLang] = useState('uz')
   const [query, setQuery] = useState('')
   const snapPoints = useMemo(() => ['40%', '70%'], [])

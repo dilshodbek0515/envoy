@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, View } from 'react-native'
 import React, { useState } from 'react'
 import { MaskedTextInput, MaskedTextInputProps } from 'react-native-mask-text'
 import { IThemeColors } from '@/theme/color'
@@ -19,15 +19,11 @@ const AppPhoneInput = ({
   const length = (props.value ?? '').length
 
   const prefixAnimatedStyle = useAnimatedStyle(() => {
-    const translateY = withTiming(active || length > 0 ? 0 : 55, {
-      duration: 300
-    })
-    const opacity = withTiming(active || length > 0 ? 1 : 0, {
-      duration: active ? 1000 : 100
-    })
+    const scale = withTiming(active || length > 0 ? 1 : 0.8, { duration: 250 })
+    const opacity = withTiming(active || length > 0 ? 1 : 0, { duration: 250 })
     return {
-      transform: [{ translateY }],
-      opacity
+      opacity,
+      transform: [{ scale }]
     }
   })
 
@@ -54,19 +50,14 @@ const AppPhoneInput = ({
     }
   })
 
-  const animatedRightBoxStyle = useAnimatedStyle(() => {
-    const translateX = withTiming(length <= 0 ? 55 : 0, { duration: 300 })
+  const animatedCloseBoxStyle = useAnimatedStyle(() => {
+    const opacity = withTiming(length > 0 ? 1 : 0, { duration: 200 })
+    const translateX = withTiming(length > 0 ? 0 : 30, { duration: 200 })
 
     return {
+      opacity,
       transform: [{ translateX }]
     }
-  })
-
-  const animatedCloseBoxStyle = useAnimatedStyle(() => {
-    const opacity = withTiming(length <= 0 ? 0 : 1, {
-      duration: length <= 0 ? 1000 : 100
-    })
-    return { opacity }
   })
 
   return (
@@ -112,9 +103,7 @@ const AppPhoneInput = ({
         {label}
       </Animated.Text>
 
-      <Animated.View
-        style={[styles(Colors).inputRightBox, animatedRightBoxStyle]}
-      >
+      <Animated.View style={[styles(Colors).inputRightBox]}>
         <AnimatedPressable
           onPress={() => {
             props.onChangeText?.('', '')
@@ -125,6 +114,7 @@ const AppPhoneInput = ({
               borderColor: activeColor,
               marginVertical: 10
             },
+
             animatedCloseBoxStyle
           ]}
         >

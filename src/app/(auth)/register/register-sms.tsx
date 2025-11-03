@@ -1,16 +1,16 @@
-import { Animated, Pressable, StyleSheet, View } from 'react-native'
+import { Animated, Pressable, View } from 'react-native'
 import { useEffect, useRef, useState } from 'react'
 import AppText from '@/components/text'
 import { AppRoutes } from '@/constants/routes'
 import { router } from 'expo-router'
 import PageHeader from '@/components/header/PageHeader'
 import { useAtomValue } from 'jotai'
-import { resetPasswordSms } from '.'
 import useThemeColor from '@/theme/useTheme'
-import { Colors, Screens } from '@/shared/tokens'
+import { Screens } from '@/shared/tokens'
 import CountdownTimer from '@/widget/auth/login/timer'
-
-const ResetPasswordSmsCode = () => {
+import { resetPasswordSms } from '../reset-password'
+import { vibration } from '@/utils/haptics'
+const RegisterSms = () => {
   const smsCode = useAtomValue(resetPasswordSms)
   const [inputCode, setInputCode] = useState('')
   const Colors = useThemeColor()
@@ -36,7 +36,7 @@ const ResetPasswordSmsCode = () => {
   useEffect(() => {
     if (inputCode.length > 3) {
       if (inputCode === smsCode) {
-        router.replace(AppRoutes.auth.resetPassword.newPassword)
+        router.replace(AppRoutes.auth.register.registerInfo)
       } else {
         setInputCode('')
       }
@@ -120,7 +120,10 @@ const ResetPasswordSmsCode = () => {
                   <AnimatedButton
                     key={buttonValue}
                     label={buttonValue.toString()}
-                    onPress={() => handlePress(buttonValue.toString())}
+                    onPress={() => {
+                      handlePress(buttonValue.toString())
+                      vibration.heavy()
+                    }}
                     color={Colors.Boxbackground}
                   />
                 ))}
@@ -133,7 +136,7 @@ const ResetPasswordSmsCode = () => {
   )
 }
 
-export default ResetPasswordSmsCode
+export default RegisterSms
 
 // animated
 const AnimatedButton = ({
@@ -183,14 +186,3 @@ const AnimatedButton = ({
     </Animated.View>
   )
 }
-
-const styles = StyleSheet.create({
-  green: {
-    borderWidth: 1,
-    borderColor: Colors.green
-  },
-  red: {
-    borderWidth: 1,
-    borderColor: Colors.red
-  }
-})

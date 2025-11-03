@@ -59,11 +59,14 @@ const AppInput = ({ label, isPassword, ...props }: TextInputProps & IProps) => {
   })
 
   const animatedCloseBoxStyle = useAnimatedStyle(() => {
-    const opacity = withTiming(length <= 0 ? 0 : 1, {
-      duration: length <= 0 ? 300 : 1000
-    })
-    return { opacity }
-  })
+    const opacity = withTiming(length > 0 ? 1 : 0, { duration: 200 })
+    const translateX = withTiming(length > 0 ? 0 : 20, { duration: 200 })
+
+    return {
+      opacity,
+      transform: [{ translateX }]
+    }
+  }, [length])
 
   const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
@@ -172,7 +175,6 @@ const styles = (Colors: IThemeColors) =>
     },
 
     eyeButton: {
-      // height: 53,
       width: 55,
       justifyContent: 'center',
       alignItems: 'center'

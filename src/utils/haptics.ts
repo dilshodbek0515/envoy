@@ -1,4 +1,3 @@
-// utils/haptics.ts
 import * as Haptics from 'expo-haptics'
 
 export const vibration = {
@@ -6,7 +5,7 @@ export const vibration = {
   medium: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium),
   heavy: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy),
 
-  selection: () => Haptics.selectionAsync(),
+  Selection: () => Haptics.selectionAsync(),
 
   notification: {
     success: () =>

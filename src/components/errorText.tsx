@@ -1,4 +1,3 @@
-import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import AppText from './text'
 import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated'
@@ -28,5 +27,3 @@ const ErrorText = ({
 }
 
 export default ErrorText
-
-const styles = StyleSheet.create({})

@@ -13,7 +13,7 @@ import AppInput from '@/components/Input/passwordInput'
 import axios from 'axios'
 import { resetPasswordPhone } from '.'
 import { useAtomValue } from 'jotai'
-const URL = 'https://envoy.odamqosh.com'
+import { URL } from '@/shared/api'
 
 const ResetPasswordNewPassword = () => {
   const phone = useAtomValue(resetPasswordPhone)

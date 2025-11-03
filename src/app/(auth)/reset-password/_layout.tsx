@@ -1,4 +1,3 @@
-import { StyleSheet } from 'react-native'
 import React from 'react'
 import { Stack } from 'expo-router'
 import useThemeColor from '@/theme/useTheme'
@@ -21,5 +20,3 @@ const ResetPasswordLayout = () => {
 }
 
 export default ResetPasswordLayout
-
-const styles = StyleSheet.create({})

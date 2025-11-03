@@ -1,4 +1,3 @@
-import { Platform, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Stack } from 'expo-router'
 import useThemeColor from '@/theme/useTheme'
@@ -13,7 +12,6 @@ const AuthLayout = () => {
       }}
     >
       <Stack.Screen name='index' />
-      {/* <Stack.Screen name='auth' /> */}
       <Stack.Screen
         name='reset-password'
         options={{
@@ -25,5 +23,3 @@ const AuthLayout = () => {
 }
 
 export default AuthLayout
-
-const styles = StyleSheet.create({})

@@ -1,8 +1,7 @@
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 import React, { useCallback } from 'react'
 import { Spacing } from '@/shared/tokens'
 import useThemeColor from '@/theme/useTheme'
-import { IThemeColors } from '@/theme/color'
 import { Controller, useForm } from 'react-hook-form'
 import { unMask } from 'react-native-mask-text'
 import AppPhoneInput from '@/components/Input/phoneInput'
@@ -45,7 +44,7 @@ const Login = ({ onSubmitRef }: LoginProps) => {
         payload
       )
       console.log('Login muvaffaqiyatli', data)
-    } catch (error) {
+    } catch (error: any) {
       console.log(error)
     }
   }, [])
@@ -96,5 +95,3 @@ const Login = ({ onSubmitRef }: LoginProps) => {
 }
 
 export default Login
-
-const styles = (Colors: IThemeColors) => StyleSheet.create({})

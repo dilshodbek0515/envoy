@@ -3,7 +3,6 @@ import { useFonts } from 'expo-font'
 import { SplashScreen, Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { useEffect } from 'react'
-import { StyleSheet } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 SplashScreen.preventAutoHideAsync()
@@ -17,8 +16,8 @@ export default function RootLayout () {
   })
 
   useEffect(() => {
-    if (load || load) SplashScreen.hideAsync()
-  }, [load, load])
+    if (load || error) SplashScreen.hideAsync()
+  }, [load, error])
 
   if (!load && !error) return null
 
@@ -36,5 +35,3 @@ export default function RootLayout () {
     </GestureHandlerRootView>
   )
 }
-
-const styles = StyleSheet.create({})

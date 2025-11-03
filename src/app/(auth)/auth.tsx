@@ -51,11 +51,14 @@ export default function Auth () {
     pageRef.current?.scrollToIndex({
       index,
       animated: true
-    })
+    }),
+      Keyboard.dismiss()
   }
 
-  const handleScroll = useAnimatedScrollHandler(e => {
-    scrollX.value = e.contentOffset.x
+  const handleScroll = useAnimatedScrollHandler({
+    onScroll: e => {
+      scrollX.value = e.contentOffset.x
+    }
   })
 
   const renderPage = ({ item }: any) => {
@@ -101,9 +104,7 @@ export default function Auth () {
             <Pressable
               key={item.id}
               style={styles(Colors).tabBox}
-              onPress={() => {
-                goToPage(index), Keyboard.dismiss()
-              }}
+              onPress={() => goToPage(index)}
             >
               <Animated.Text style={[styles(Colors).tabTitle, animatedStyle]}>
                 {item.title}
@@ -126,7 +127,7 @@ export default function Auth () {
         ref={pageRef}
         data={pages}
         renderItem={renderPage}
-        keyExtractor={page => page.id.toString()}
+        keyExtractor={item => item.id.toString()}
         horizontal
         pagingEnabled
         onViewableItemsChanged={viewablePage}
@@ -137,7 +138,7 @@ export default function Auth () {
       />
 
       <Pressable
-        onPress={() => {
+        onPress={() => {  
           if (activePage === 0) {
             loginSubmitRef.current?.()
           } else {
@@ -146,18 +147,17 @@ export default function Auth () {
         }}
         style={{
           backgroundColor: Colors.primary,
-          height: 60,
+          height: 55,
           justifyContent: 'center',
           alignItems: 'center',
           position: 'absolute',
-          bottom: insetBottom + 10,
-          width: Screens.width - Spacing.horizontal,
-          left: '50%',
-          transform: [{ translateX: '-50%' }],
+          bottom: 10 + insetBottom,
+          width: Screens.width - Spacing.horizontal * 2,
+          left: Spacing.horizontal,
           borderRadius: 20
         }}
       >
-        <AppText style={{ fontSize: 18, fontWeight: 600 }}>
+        <AppText variant='semiBold' style={{ fontSize: 18, color: 'white' }}>
           {activePage === 0 ? 'Dasturga kirish' : "Ro'yxatdan o'tish"}
         </AppText>
       </Pressable>
