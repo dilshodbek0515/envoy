@@ -15,13 +15,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import ErrorText from '@/components/errorText'
 import { atom, useAtom, useSetAtom } from 'jotai'
 import { unMask } from 'react-native-mask-text'
-import axios from 'axios'
 import useThemeColor from '@/theme/useTheme'
 import { router } from 'expo-router'
 import { AppRoutes } from '@/constants/routes'
-import { URL } from '@/shared/api'
 import { sendSmsAtom } from '@/service/user/send-sms/constroller'
 import { checkPhoneAtom } from '@/service/user/check-phone/controller'
+import { resetPasswordPhone } from '@/service/user/controller/controller'
 
 const phoneSchema = z.object({
   phone: z.string().refine(value => value.length >= 12, {
@@ -30,11 +29,11 @@ const phoneSchema = z.object({
 })
 
 export type TPhoneSchemaType = z.infer<typeof phoneSchema>
-export const resetPasswordPhone = atom('')
 export const resetPasswordSms = atom('')
 
 const ResetPasswordCheckPhone = () => {
   const [phoneState, setPhone] = useAtom(checkPhoneAtom)
+  const setResetPhone = useSetAtom(resetPasswordPhone)
   const setSms = useSetAtom(resetPasswordSms)
   const [isLoading, setIsLoading] = useState(false)
   const [smsState, sendSmsAction] = useAtom(sendSmsAtom)
@@ -52,6 +51,7 @@ const ResetPasswordCheckPhone = () => {
 
   const onSubmit = async (data: any) => {
     const unFormatted = '+998' + unMask(data.phone)
+    setResetPhone(unFormatted)
     const exists = await setPhone(unFormatted)
     if (exists) {
       const code = await sendSmsAction(unFormatted)
