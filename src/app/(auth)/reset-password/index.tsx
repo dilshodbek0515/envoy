@@ -98,8 +98,8 @@ const ResetPasswordCheckPhone = () => {
             error={'Telefon raqamni kiriting'}
             isVisable={errors.phone?.message}
           />
-          {/* 
-          <ErrorText
+
+          {/* <ErrorText
             error={"Siz ro'yxatdan o'tmagansiz"}
             isVisable={phoneState === false ? false : true}
           /> */}
