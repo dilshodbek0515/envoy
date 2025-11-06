@@ -21,7 +21,6 @@ const RegisterInfo = () => {
   const Colors = useThemeColor()
   const setRegisterState = useSetAtom(registerAtom)
   const registerState = useAtomValue(registerAtom)
-  console.log(registerState)
   const {
     control,
     handleSubmit,

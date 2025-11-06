@@ -12,5 +12,13 @@ export const AppRoutes = {
       checkSmsCode: '(auth)/reset-password/sms-code',
       newPassword: '(auth)/reset-password/new-password'
     }
+  },
+
+  customer: {
+    index: '(app)/customer'
+  },
+
+  driver: {
+    index: '(app)/driver'
   }
 }

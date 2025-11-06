@@ -1,4 +1,4 @@
-import { View } from 'react-native'
+import { Button, View } from 'react-native'
 import React, { useCallback } from 'react'
 import { Spacing } from '@/shared/tokens'
 import useThemeColor from '@/theme/useTheme'
@@ -10,6 +10,8 @@ import axios from 'axios'
 import AppText from '@/components/text'
 import { router } from 'expo-router'
 import { AppRoutes } from '@/constants/routes'
+import { useAtom } from 'jotai'
+import { authAtom } from '@/service/user/register-login/controller'
 
 interface LoginProps {
   onSubmitRef: React.MutableRefObject<() => void>
@@ -18,35 +20,17 @@ interface LoginProps {
 const Login = ({ onSubmitRef }: LoginProps) => {
   const Colors = useThemeColor()
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors }
-  } = useForm({
-    defaultValues: {
-      phone: '',
-      password: ''
-    }
+  const { control, handleSubmit } = useForm({
+    defaultValues: { phone: '', password: '' }
   })
+
+  const [loginState, setLoginState] = useAtom(authAtom)
+  console.log('loginState', loginState)
 
   const onSubmit = useCallback(async (data: any) => {
     const unformatted = '+998' + unMask(data.phone)
-    const payload = {
-      phone_number: unformatted,
-      password: data.password
-    }
-
-    console.log(payload)
-
-    try {
-      const { data } = await axios.post(
-        'http://my.example.uz.webcoder.uz/user/login/',
-        payload
-      )
-      console.log('Login muvaffaqiyatli', data)
-    } catch (error: any) {
-      console.log(error)
-    }
+    const payload = { phone: unformatted, password: data.password }
+    setLoginState(payload, 'login')
   }, [])
 
   onSubmitRef.current = handleSubmit(onSubmit)

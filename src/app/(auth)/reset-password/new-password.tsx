@@ -18,9 +18,9 @@ const ResetPasswordNewPassword = () => {
     setNewPasswordState(data.new_password)
   }
 
-  useEffect(() => {
-    console.log('New password', newPassState)
-  }, [newPassState])
+  // useEffect(() => {
+  //   console.log('New password', newPassState)
+  // }, [newPassState])
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>

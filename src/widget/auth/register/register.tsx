@@ -16,10 +16,17 @@ interface RegProps {
   onSubmitRef: React.MutableRefObject<() => void>
 }
 
-export const registerAtom = atom({
+interface IRegisterStateAtom {
+  phone: string
+  name: string
+  role: 'Customer' | 'Driver'
+  password: string
+}
+
+export const registerAtom = atom<IRegisterStateAtom>({
   phone: '',
   name: '',
-  role: '',
+  role: 'Customer',
   password: ''
 })
 
@@ -29,7 +36,6 @@ const Register = ({ onSubmitRef }: RegProps) => {
   const [_sms, setSms] = useAtom(resetPasswordSms)
   const setRegisterState = useSetAtom(registerAtom)
   const registerState = useAtomValue(registerAtom)
-  console.log(registerState)
   const [phoneState, setCheckPhone] = useAtom(checkPhoneAtom)
   const [smsState, sendSmsAction] = useAtom(sendSmsAtom)
   console.log('yangi sms', smsState)

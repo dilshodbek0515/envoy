@@ -5,17 +5,19 @@ import { Controller, useForm } from 'react-hook-form'
 import AppInput from '@/components/Input/passwordInput'
 import { Spacing } from '@/shared/tokens'
 import useThemeColor from '@/theme/useTheme'
-import { useAtomValue, useSetAtom } from 'jotai'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { registerAtom } from '@/widget/auth/register/register'
 import { registerPasswordAtom } from '@/service/user/register-password/controller'
+import { authAtom } from '@/service/user/register-login/controller'
 
 export default function RegisterPassword () {
   const Colors = useThemeColor()
-  const setRegisterState = useSetAtom(registerAtom)
   const registerState = useAtomValue(registerAtom)
+  const setRegisterState = useSetAtom(registerAtom)
   const registerPassword = useSetAtom(registerPasswordAtom)
-  console.log(registerState)
+  const [register, setRegister] = useAtom(authAtom)
   const { control, handleSubmit } = useForm({ defaultValues: { password: '' } })
+  console.log('register', register)
 
   const onSubmit = (data: any) => {
     const { password } = data
@@ -24,6 +26,8 @@ export default function RegisterPassword () {
       password
     }))
     registerPassword()
+
+    setRegister(registerState, 'register')
   }
 
   return (
