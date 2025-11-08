@@ -24,16 +24,27 @@ export default function Auth () {
   const registerSubmitRef = useRef<() => void>(() => {})
   const loginSubmitRef = useRef<() => void>(() => {})
   const insetBottom = useSafeAreaInsets().bottom
+  const [loginValid, setLoginValid] = useState(false)
+  const [registerValid, setRegisterValid] = useState(false)
+  const isButtonActive = activePage === 0 ? loginValid : registerValid
+
   const pages = [
     {
       id: 1,
       title: 'Login',
-      component: <Login onSubmitRef={loginSubmitRef} />
+      component: (
+        <Login onSubmitRef={loginSubmitRef} onValidityChange={setLoginValid} />
+      )
     },
     {
       id: 2,
       title: 'Register',
-      component: <Register onSubmitRef={registerSubmitRef} />
+      component: (
+        <Register
+          onSubmitRef={registerSubmitRef}
+          onValidityChange={setRegisterValid}
+        />
+      )
     }
   ]
 
@@ -137,30 +148,45 @@ export default function Auth () {
         onScrollBeginDrag={Keyboard.dismiss}
       />
 
-      <Pressable
-        onPress={() => {  
-          if (activePage === 0) {
-            loginSubmitRef.current?.()
-          } else {
-            registerSubmitRef.current?.()
-          }
-        }}
+      <View
         style={{
-          backgroundColor: Colors.primary,
-          height: 55,
-          justifyContent: 'center',
-          alignItems: 'center',
+          width: Screens.width,
+          height: Screens.height * 0.12,
           position: 'absolute',
-          bottom: 10 + insetBottom,
-          width: Screens.width - Spacing.horizontal * 2,
-          left: Spacing.horizontal,
-          borderRadius: 20
+          bottom: 0 + insetBottom,
+          backgroundColor: Colors.Boxbackground06,
+          paddingHorizontal: Spacing.horizontal,
+          paddingVertical: 10,
+          alignItems: 'center',
+          borderTopLeftRadius: 30,
+          borderTopRightRadius: 30
         }}
       >
-        <AppText variant='semiBold' style={{ fontSize: 18, color: 'white' }}>
-          {activePage === 0 ? 'Dasturga kirish' : "Ro'yxatdan o'tish"}
-        </AppText>
-      </Pressable>
+        <Pressable
+          onPress={() => {
+            if (activePage === 0) {
+              loginSubmitRef.current?.()
+            } else {
+              registerSubmitRef.current?.()
+            }
+          }}
+          disabled={!isButtonActive}
+          style={{
+            backgroundColor: isButtonActive
+              ? Colors.primary
+              : Colors.Boxbackground04,
+            height: 55,
+            width: Screens.width - Spacing.horizontal * 2,
+            borderRadius: 20,
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          <AppText variant='semiBold' style={{ fontSize: 18, color: 'white' }}>
+            Yuborish
+          </AppText>
+        </Pressable>
+      </View>
     </View>
   )
 }

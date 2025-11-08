@@ -1,12 +1,11 @@
 import { Button, View } from 'react-native'
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { Spacing } from '@/shared/tokens'
 import useThemeColor from '@/theme/useTheme'
 import { Controller, useForm } from 'react-hook-form'
 import { unMask } from 'react-native-mask-text'
 import AppPhoneInput from '@/components/Input/phoneInput'
 import AppInput from '@/components/Input/passwordInput'
-import axios from 'axios'
 import AppText from '@/components/text'
 import { router } from 'expo-router'
 import { AppRoutes } from '@/constants/routes'
@@ -15,14 +14,23 @@ import { authAtom } from '@/service/user/register-login/controller'
 
 interface LoginProps {
   onSubmitRef: React.MutableRefObject<() => void>
+  onValidityChange: (isValid: boolean) => void
 }
 
-const Login = ({ onSubmitRef }: LoginProps) => {
+const Login = ({ onSubmitRef, onValidityChange }: LoginProps) => {
   const Colors = useThemeColor()
 
-  const { control, handleSubmit } = useForm({
+  const { control, handleSubmit, watch } = useForm({
     defaultValues: { phone: '', password: '' }
   })
+
+  const phone = watch('phone')
+  const password = watch('password')
+  const isValid = phone.length === 12 && password.length >= 8
+
+  useEffect(() => {
+    onValidityChange(isValid)
+  }, [isValid])
 
   const [loginState, setLoginState] = useAtom(authAtom)
   console.log('loginState', loginState)

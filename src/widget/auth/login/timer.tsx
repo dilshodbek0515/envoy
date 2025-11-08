@@ -24,8 +24,9 @@ const CountdownTimer = () => {
       style={{
         width: 20,
         color: Colors.primary,
-        fontSize: 18,
-        textAlign: 'left'
+        fontSize: 14,
+        textAlign: 'left',
+        flexWrap: 'nowrap'
       }}
     >
       {seconds}

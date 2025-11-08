@@ -28,3 +28,9 @@ export const authStateAtom = atom<IAuthState>({
   isLoading: false,
   error: null
 })
+
+export const defualt = {
+  access: null,
+  refresh: null,
+  role: null
+}

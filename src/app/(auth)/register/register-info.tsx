@@ -87,7 +87,9 @@ const RegisterInfo = () => {
                   role === 'Driver' ? Colors.borderColor : Colors.pageBackground
               }}
             >
-              <AppText style={{ fontSize: 18 }}>Haydovchi</AppText>
+              <AppText variant='semiBold' style={{ fontSize: 16 }}>
+                Haydovchi
+              </AppText>
             </Pressable>
 
             <Pressable
@@ -103,7 +105,9 @@ const RegisterInfo = () => {
                 alignItems: 'center'
               }}
             >
-              <AppText style={{ fontSize: 18 }}>Mijoz</AppText>
+              <AppText variant='semiBold' style={{ fontSize: 16 }}>
+                Mijoz
+              </AppText>
             </Pressable>
           </View>
 

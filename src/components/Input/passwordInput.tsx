@@ -58,15 +58,22 @@ const AppInput = ({ label, isPassword, ...props }: TextInputProps & IProps) => {
     }
   })
 
-  const animatedCloseBoxStyle = useAnimatedStyle(() => {
-    const opacity = withTiming(length > 0 ? 1 : 0, { duration: 200 })
-    const translateX = withTiming(length > 0 ? 0 : 20, { duration: 200 })
+  // const animatedCloseBoxStyle = useAnimatedStyle(() => {
+  //   const opacity = withTiming(length > 0 ? 1 : 0, { duration: 200 })
+  //   const translateX = withTiming(length > 0 ? 0 : 20, { duration: 200 })
 
-    return {
-      opacity,
-      transform: [{ translateX }]
-    }
-  }, [length])
+  //   return {
+  //     opacity,
+  //     transform: [{ translateX }]
+  //   }
+  // }, [length])
+
+  const animatedCloseBoxStyle = useAnimatedStyle(() => {
+    const opacity = withTiming(length <= 0 ? 0 : 1, {
+      duration: length <= 0 ? 200 : 1000
+    })
+    return { opacity }
+  }) //------------
 
   const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
@@ -74,11 +81,11 @@ const AppInput = ({ label, isPassword, ...props }: TextInputProps & IProps) => {
     <View style={[styles(Colors).inputBox, { borderColor: activeColor }]}>
       <TextInput
         placeholderTextColor={Colors.textSecondary}
+        secureTextEntry={isSecurity && isPassword}
         onFocus={() => setActive(true)}
         onBlur={() => setActive(false)}
         style={styles(Colors).input}
         {...props}
-        secureTextEntry={isSecurity && isPassword}
       />
 
       <Animated.Text
@@ -160,7 +167,8 @@ const styles = (Colors: IThemeColors) =>
       left: Spacing.horizontal,
       backgroundColor: Colors.pageBackground,
       fontSize: 16,
-      borderRadius: 100
+      borderRadius: 100,
+      transform: [{ translateY: '-50%' }] //------------
     },
 
     inputRightBox: {
@@ -168,10 +176,11 @@ const styles = (Colors: IThemeColors) =>
       top: 0,
       right: 0,
       height: 53,
-      width: 110,
-      alignItems: 'center',
-      justifyContent: 'center',
-      flexDirection: 'row'
+      // width: 110,  //------------
+      // alignItems: 'center',  //------------
+      // justifyContent: 'center',  //------------
+      flexDirection: 'row',
+      overflow: 'hidden'
     },
 
     eyeButton: {

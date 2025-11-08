@@ -43,7 +43,7 @@ export const welcomeStyle = StyleSheet.create({
   },
 
   boshlashBtn: {
-    width: '100%',
+    width: Screens.width * 0.9,
     height: Screens.height * 0.075,
     backgroundColor: Colors.primary,
     borderRadius: 25,
@@ -87,6 +87,5 @@ export const welcomeStyle = StyleSheet.create({
   dote: {
     height: 5,
     borderRadius: 20
-  },
-
+  }
 })

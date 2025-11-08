@@ -45,7 +45,7 @@ const RegisterSms = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <PageHeader title='Parolni tiklash' isEnabledBack />
+      <PageHeader title='Sms kod' isEnabledBack />
       <View
         style={{
           flex: 1,

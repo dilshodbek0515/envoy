@@ -9,8 +9,10 @@ import { resetPasswordSms } from '.'
 import useThemeColor from '@/theme/useTheme'
 import { Colors, Screens } from '@/shared/tokens'
 import CountdownTimer from '@/widget/auth/login/timer'
+import { resetPasswordPhone } from '@/service/user/controller/controller'
 
 const ResetPasswordSmsCode = () => {
+  const phoneNumber = useAtomValue(resetPasswordPhone)
   const smsCode = useAtomValue(resetPasswordSms)
   const [inputCode, setInputCode] = useState('')
   const Colors = useThemeColor()
@@ -45,7 +47,7 @@ const ResetPasswordSmsCode = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <PageHeader title='Parolni tiklash' isEnabledBack />
+      <PageHeader title='Sms kod' isEnabledBack />
       <View
         style={{
           flex: 1,
@@ -53,11 +55,20 @@ const ResetPasswordSmsCode = () => {
           justifyContent: 'center'
         }}
       >
+        <AppText
+          style={{
+            position: 'absolute',
+            top: 10,
+            fontSize: 16
+          }}
+        >
+          {phoneNumber || '+998 99 999 99 99'}
+        </AppText>
         <View
           style={{
             flexDirection: 'row',
             gap: 10,
-            marginBottom: 250
+            marginBottom: 300
           }}
         >
           {[1, 2, 3, 4].map((_, index) => {
@@ -68,10 +79,10 @@ const ResetPasswordSmsCode = () => {
                   {
                     width: 70,
                     height: 70,
-                    borderRadius: 10,
+                    borderRadius: 20,
+                    backgroundColor: Colors.Boxbackground,
                     alignItems: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: Colors.Boxbackground
+                    justifyContent: 'center'
                   }
                 ]}
               >
@@ -102,13 +113,13 @@ const ResetPasswordSmsCode = () => {
           >
             <CountdownTimer />
             <AppText
-              variant='medium'
+              variant='regular'
               style={{
-                color: Colors.primary,
-                fontSize: 18
+                color: Colors.textPrimary06,
+                fontSize: 14
               }}
             >
-              Qayta sms yuboring
+              Qayta SMS jo'natish
             </AppText>
             <AppText />
           </View>
@@ -172,13 +183,15 @@ const AnimatedButton = ({
         onPressOut={handlePressOut}
         onPress={onPress}
         style={{
-          height: 60,
+          height: 71,
           backgroundColor: color,
           justifyContent: 'center',
           alignItems: 'center'
         }}
       >
-        <AppText style={{ fontSize: 20 }}>{label}</AppText>
+        <AppText variant='semiBold' style={{ fontSize: 20 }}>
+          {label}
+        </AppText>
       </Pressable>
     </Animated.View>
   )

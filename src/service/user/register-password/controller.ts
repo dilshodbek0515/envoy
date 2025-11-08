@@ -25,7 +25,7 @@ export const registerPasswordAtom = atom(
         data: response.data.data
       })
 
-      console.log(response.data)
+      console.log('response.data', response.data)
     } catch (error) {
       if (error instanceof AxiosError) {
         set(registerPassword, {

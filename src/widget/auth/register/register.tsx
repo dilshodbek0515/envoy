@@ -1,5 +1,5 @@
-import { ActivityIndicator, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { View } from 'react-native'
+import React, { useEffect } from 'react'
 import { Spacing } from '@/shared/tokens'
 import useThemeColor from '@/theme/useTheme'
 import { Controller, useForm } from 'react-hook-form'
@@ -8,12 +8,13 @@ import AppPhoneInput from '@/components/Input/phoneInput'
 import ErrorText from '@/components/errorText'
 import { router } from 'expo-router'
 import { AppRoutes } from '@/constants/routes'
-import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
+import { atom, useAtom, useSetAtom } from 'jotai'
 import { resetPasswordSms } from '@/app/(auth)/reset-password'
 import { checkPhoneAtom } from '@/service/user/check-phone/controller'
 import { sendSmsAtom } from '@/service/user/send-sms/constroller'
 interface RegProps {
   onSubmitRef: React.MutableRefObject<() => void>
+  onValidityChange: (isValid: boolean) => void
 }
 
 interface IRegisterStateAtom {
@@ -30,26 +31,24 @@ export const registerAtom = atom<IRegisterStateAtom>({
   password: ''
 })
 
-const Register = ({ onSubmitRef }: RegProps) => {
+const Register = ({ onSubmitRef, onValidityChange }: RegProps) => {
   const Colors = useThemeColor()
-  const [loading, setLoading] = useState(false)
   const [_sms, setSms] = useAtom(resetPasswordSms)
   const setRegisterState = useSetAtom(registerAtom)
-  const registerState = useAtomValue(registerAtom)
   const [phoneState, setCheckPhone] = useAtom(checkPhoneAtom)
   const [smsState, sendSmsAction] = useAtom(sendSmsAtom)
   console.log('yangi sms', smsState)
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors }
-  } = useForm({
-    defaultValues: {
-      phone: '',
-      password: ''
-    }
+  const { control, handleSubmit, watch } = useForm({
+    defaultValues: { phone: '', password: '' }
   })
+
+  const phone = watch('phone')
+  const isValid = phone.length === 12
+
+  useEffect(() => {
+    onValidityChange(isValid)
+  }, [isValid])
 
   const onSubmit = async (data: any) => {
     const unformatted = '+998' + unMask(data.phone)
@@ -111,7 +110,6 @@ const Register = ({ onSubmitRef }: RegProps) => {
         error="Raqam Ro'yhatdan o'tgan"
         isVisable={phoneState.exists ? phoneState.exists : undefined}
       />
-      {loading && <ActivityIndicator color={'red'} size={'large'} />}
     </View>
   )
 }

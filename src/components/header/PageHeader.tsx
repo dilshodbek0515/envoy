@@ -4,7 +4,7 @@ import useThemeColor from '@/theme/useTheme'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Screens, Spacing } from '@/shared/tokens'
 import AppText from '../text'
-import AntDesign from '@expo/vector-icons/AntDesign'
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6'
 import { router } from 'expo-router'
 
 interface IProps {
@@ -33,10 +33,7 @@ const PageHeader = ({ title = 'Header', isEnabledBack }: IProps) => {
           alignItems: 'center'
         }}
       >
-        <AppText
-          variant='semiBold'
-          style={{ fontSize: 20, color: Colors.textSecondary }}
-        >
+        <AppText variant='semiBold' style={{ fontSize: 20, color: 'white' }}>
           {title}
         </AppText>
       </View>
@@ -54,7 +51,7 @@ const PageHeader = ({ title = 'Header', isEnabledBack }: IProps) => {
             height
           }}
         >
-          <AntDesign name='arrow-left' size={24} color={Colors.textSecondary} />
+          <FontAwesome6 name='arrow-left' size={24} color='white' />
         </Pressable>
       )}
     </View>

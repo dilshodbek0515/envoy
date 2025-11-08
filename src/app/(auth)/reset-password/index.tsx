@@ -2,14 +2,15 @@ import {
   ActivityIndicator,
   Button,
   Keyboard,
+  Pressable,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import PageHeader from '@/components/header/PageHeader'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm, useWatch } from 'react-hook-form'
 import AppPhoneInput from '@/components/Input/phoneInput'
-import { Spacing } from '@/shared/tokens'
+import { Screens, Spacing } from '@/shared/tokens'
 import z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import ErrorText from '@/components/errorText'
@@ -21,6 +22,8 @@ import { AppRoutes } from '@/constants/routes'
 import { sendSmsAtom } from '@/service/user/send-sms/constroller'
 import { checkPhoneAtom } from '@/service/user/check-phone/controller'
 import { resetPasswordPhone } from '@/service/user/controller/controller'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import AppText from '@/components/text'
 
 const phoneSchema = z.object({
   phone: z.string().refine(value => value.length >= 12, {
@@ -32,10 +35,10 @@ export type TPhoneSchemaType = z.infer<typeof phoneSchema>
 export const resetPasswordSms = atom('')
 
 const ResetPasswordCheckPhone = () => {
-  const [phoneState, setPhone] = useAtom(checkPhoneAtom)
+  const [_phoneState, setPhone] = useAtom(checkPhoneAtom)
   const setResetPhone = useSetAtom(resetPasswordPhone)
   const setSms = useSetAtom(resetPasswordSms)
-  const [isLoading, setIsLoading] = useState(false)
+  const insetBottom = useSafeAreaInsets().bottom
   const [smsState, sendSmsAction] = useAtom(sendSmsAtom)
   const Colors = useThemeColor()
   const {
@@ -44,12 +47,14 @@ const ResetPasswordCheckPhone = () => {
     formState: { errors }
   } = useForm<TPhoneSchemaType>({
     resolver: zodResolver(phoneSchema),
-    defaultValues: {
-      phone: ''
-    }
+    defaultValues: { phone: '' }
   })
 
+  const phone = useWatch({ control, name: 'phone' })
+  const isValid = phone.length === 12
+
   const onSubmit = async (data: any) => {
+    if (!isValid) return
     const unFormatted = '+998' + unMask(data.phone)
     setResetPhone(unFormatted)
     const exists = await setPhone(unFormatted)
@@ -59,14 +64,9 @@ const ResetPasswordCheckPhone = () => {
         setSms(code)
         console.log('sms code', code)
       }
-    }
-  }
-
-  useEffect(() => {
-    if (phoneState.exists) {
       router.push(AppRoutes.auth.resetPassword.checkSmsCode)
     }
-  }, [phoneState.exists])
+  }
 
   useEffect(() => {
     if (smsState.code) {
@@ -99,16 +99,42 @@ const ResetPasswordCheckPhone = () => {
             isVisable={errors.phone?.message}
           />
 
-          {/* <ErrorText
-            error={"Siz ro'yxatdan o'tmagansiz"}
-            isVisable={phoneState === false ? false : true}
-          /> */}
-
-          {!isLoading ? (
-            <Button title='Davom etish' onPress={handleSubmit(onSubmit)} />
-          ) : (
-            <ActivityIndicator size={'large'} color={Colors.primary} />
-          )}
+          <View
+            style={{
+              width: Screens.width,
+              height: Screens.height * 0.12,
+              position: 'absolute',
+              bottom: 0 + insetBottom,
+              backgroundColor: Colors.Boxbackground06,
+              paddingHorizontal: Spacing.horizontal,
+              paddingVertical: 10,
+              alignItems: 'center',
+              borderTopLeftRadius: 30,
+              borderTopRightRadius: 30
+            }}
+          >
+            <Pressable
+              onPress={handleSubmit(onSubmit)}
+              disabled={!isValid}
+              style={{
+                backgroundColor: isValid
+                  ? Colors.primary
+                  : Colors.Boxbackground04,
+                height: 55,
+                width: Screens.width - Spacing.horizontal * 2,
+                borderRadius: 20,
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <AppText
+                variant='semiBold'
+                style={{ fontSize: 18, color: 'white' }}
+              >
+                Yuborish
+              </AppText>
+            </Pressable>
+          </View>
         </View>
       </View>
     </TouchableWithoutFeedback>

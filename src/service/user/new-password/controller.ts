@@ -23,6 +23,7 @@ export const newPasswordAtom = atom(
         error: null,
         data: data
       })
+      console.log(data)
     } catch (error) {
       if (error instanceof AxiosError) {
         set(newPassword, {
