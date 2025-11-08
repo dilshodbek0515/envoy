@@ -16,7 +16,7 @@ const AppPhoneInput = ({
   const [active, setActive] = useState(false)
   const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
   const activeColor = active ? Colors.primary : Colors.borderColor
-  const length = (props.value ?? '').length
+  const length = React.useMemo(() => (props.value ?? '').length, [props.value])
 
   const prefixAnimatedStyle = useAnimatedStyle(() => {
     const scale = withTiming(active || length > 0 ? 1 : 0.8, { duration: 250 })
@@ -106,7 +106,9 @@ const AppPhoneInput = ({
       <Animated.View style={[styles(Colors).inputRightBox]}>
         <AnimatedPressable
           onPress={() => {
-            props.onChangeText?.('', '')
+            if ((props.value ?? '').length > 0) {
+              props.onChangeText?.('', '')
+            }
           }}
           style={[
             styles(Colors).eyeButton,

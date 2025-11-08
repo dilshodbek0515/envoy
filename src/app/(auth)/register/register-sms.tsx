@@ -10,10 +10,15 @@ import { Screens } from '@/shared/tokens'
 import CountdownTimer from '@/widget/auth/login/timer'
 import { resetPasswordSms } from '../reset-password'
 import { vibration } from '@/utils/haptics'
+import { resetPasswordPhone } from '@/service/user/controller/controller'
 const RegisterSms = () => {
   const smsCode = useAtomValue(resetPasswordSms)
   const [inputCode, setInputCode] = useState('')
   const Colors = useThemeColor()
+  const shakeAnim = useRef(new Animated.Value(0)).current
+  const phoneNumber = useAtomValue(resetPasswordPhone)
+  const [isError, setIsError] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false)
 
   const buttons = [
     [1, 2, 3],
@@ -33,13 +38,55 @@ const RegisterSms = () => {
     }
   }
 
+  const startShake = () => {
+    Animated.sequence([
+      Animated.timing(shakeAnim, {
+        toValue: 10,
+        duration: 50,
+        useNativeDriver: true
+      }),
+      Animated.timing(shakeAnim, {
+        toValue: -10,
+        duration: 50,
+        useNativeDriver: true
+      }),
+      Animated.timing(shakeAnim, {
+        toValue: 6,
+        duration: 50,
+        useNativeDriver: true
+      }),
+      Animated.timing(shakeAnim, {
+        toValue: -6,
+        duration: 50,
+        useNativeDriver: true
+      }),
+      Animated.timing(shakeAnim, {
+        toValue: 0,
+        duration: 50,
+        useNativeDriver: true
+      })
+    ]).start()
+  }
+
   useEffect(() => {
-    if (inputCode.length > 3) {
-      if (inputCode === smsCode) {
-        router.replace(AppRoutes.auth.register.registerInfo)
-      } else {
-        setInputCode('')
-      }
+    if (inputCode.length === 4) {
+      const timer = setTimeout(() => {
+        if (inputCode === smsCode) {
+          setIsSuccess(true)
+          setTimeout(() => {
+            router.replace(AppRoutes.auth.register.registerInfo)
+          }, 400)
+        } else {
+          setIsError(true)
+          startShake()
+          setTimeout(() => {
+            setInputCode('')
+            setIsError(false)
+            vibration.heavy
+          }, 400)
+        }
+      }, 500)
+      return () => clearTimeout(timer)
     }
   }, [inputCode])
 
@@ -53,11 +100,22 @@ const RegisterSms = () => {
           justifyContent: 'center'
         }}
       >
-        <View
+        <AppText
+          style={{
+            position: 'absolute',
+            top: 10,
+            fontSize: 16
+          }}
+        >
+          {phoneNumber || '+998 99 999 99 99'}
+        </AppText>
+
+        <Animated.View
           style={{
             flexDirection: 'row',
             gap: 10,
-            marginBottom: 250
+            marginBottom: 300,
+            transform: [{ translateX: shakeAnim }]
           }}
         >
           {[1, 2, 3, 4].map((_, index) => {
@@ -71,15 +129,32 @@ const RegisterSms = () => {
                     borderRadius: 10,
                     alignItems: 'center',
                     justifyContent: 'center',
-                    backgroundColor: Colors.Boxbackground
+                    backgroundColor: Colors.Boxbackground,
+                    borderWidth: isError || isSuccess ? 1 : 0,
+                    borderColor: isError
+                      ? 'red'
+                      : isSuccess
+                      ? 'green'
+                      : 'transparent'
                   }
                 ]}
               >
-                <AppText style={{ fontSize: 30 }}>{inputCode[index]}</AppText>
+                <AppText
+                  style={{
+                    fontSize: 30,
+                    color: isError
+                      ? 'red'
+                      : isSuccess
+                      ? 'green'
+                      : Colors.textPrimary
+                  }}
+                >
+                  {inputCode[index]}
+                </AppText>
               </View>
             )
           })}
-        </View>
+        </Animated.View>
 
         <View
           style={{
@@ -102,13 +177,13 @@ const RegisterSms = () => {
           >
             <CountdownTimer />
             <AppText
-              variant='medium'
+              variant='regular'
               style={{
-                color: Colors.primary,
-                fontSize: 18
+                color: Colors.textPrimary06,
+                fontSize: 14
               }}
             >
-              Qayta sms yuboring
+              Qayta SMS jo'natish
             </AppText>
             <AppText />
           </View>

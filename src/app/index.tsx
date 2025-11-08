@@ -41,7 +41,8 @@ const index = () => {
         const role = await parsedData?.role
         let route = AppRoutes.auth.auth
 
-        if (access && role === 'Customer') route = AppRoutes.customer.index
+        if (access && role === 'Customer')
+          route = AppRoutes.customer.getOrder.index
         else if (access && role === 'Driver') route = AppRoutes.driver.index
         setNextRoute(route)
       } catch (error) {

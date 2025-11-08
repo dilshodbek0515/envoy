@@ -41,6 +41,7 @@ const ResetPasswordCheckPhone = () => {
   const insetBottom = useSafeAreaInsets().bottom
   const [smsState, sendSmsAction] = useAtom(sendSmsAtom)
   const Colors = useThemeColor()
+  const [loading, setLoading] = useState<boolean>(false)
   const {
     control,
     handleSubmit,
@@ -54,18 +55,22 @@ const ResetPasswordCheckPhone = () => {
   const isValid = phone.length === 12
 
   const onSubmit = async (data: any) => {
-    if (!isValid) return
-    const unFormatted = '+998' + unMask(data.phone)
-    setResetPhone(unFormatted)
-    const exists = await setPhone(unFormatted)
-    if (exists) {
-      const code = await sendSmsAction(unFormatted)
-      if (code) {
-        setSms(code)
-        console.log('sms code', code)
+    if (!isValid || loading) return
+    setLoading(true)
+    setTimeout(async () => {
+      const unFormatted = '+998' + unMask(data.phone)
+      setResetPhone(unFormatted)
+      const exists = await setPhone(unFormatted)
+      if (exists) {
+        const code = await sendSmsAction(unFormatted)
+        if (code) {
+          setSms(code)
+          console.log('sms code', code)
+        }
+        router.push(AppRoutes.auth.resetPassword.checkSmsCode)
       }
-      router.push(AppRoutes.auth.resetPassword.checkSmsCode)
-    }
+      setLoading(false)
+    }, 500)
   }
 
   useEffect(() => {
@@ -115,11 +120,10 @@ const ResetPasswordCheckPhone = () => {
           >
             <Pressable
               onPress={handleSubmit(onSubmit)}
-              disabled={!isValid}
+              disabled={!isValid || loading}
               style={{
-                backgroundColor: isValid
-                  ? Colors.primary
-                  : Colors.Boxbackground04,
+                backgroundColor:
+                  isValid && !loading ? Colors.primary : Colors.Boxbackground04,
                 height: 55,
                 width: Screens.width - Spacing.horizontal * 2,
                 borderRadius: 20,
@@ -127,12 +131,16 @@ const ResetPasswordCheckPhone = () => {
                 alignItems: 'center'
               }}
             >
-              <AppText
-                variant='semiBold'
-                style={{ fontSize: 18, color: 'white' }}
-              >
-                Yuborish
-              </AppText>
+              {loading ? (
+                <ActivityIndicator size='large' color={Colors.primary} />
+              ) : (
+                <AppText
+                  variant='semiBold'
+                  style={{ fontSize: 18, color: 'white' }}
+                >
+                  Yuborish
+                </AppText>
+              )}
             </Pressable>
           </View>
         </View>

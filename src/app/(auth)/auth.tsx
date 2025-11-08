@@ -1,11 +1,20 @@
 import AppText from '@/components/text'
+import { authStateAtom } from '@/service/user/register-login/type'
 import { Screens, Spacing } from '@/shared/tokens'
 import { IThemeColors } from '@/theme/color'
 import useThemeColor from '@/theme/useTheme'
 import Login from '@/widget/auth/login/login'
 import Register from '@/widget/auth/register/register'
+import { useAtom } from 'jotai'
 import { useRef, useState } from 'react'
-import { FlatList, Keyboard, Pressable, StyleSheet, View } from 'react-native'
+import {
+  ActivityIndicator,
+  FlatList,
+  Keyboard,
+  Pressable,
+  StyleSheet,
+  View
+} from 'react-native'
 import Animated, {
   Extrapolate,
   interpolate,
@@ -27,6 +36,8 @@ export default function Auth () {
   const [loginValid, setLoginValid] = useState(false)
   const [registerValid, setRegisterValid] = useState(false)
   const isButtonActive = activePage === 0 ? loginValid : registerValid
+  const [{ isLoading }] = useAtom(authStateAtom)
+  const [localLoading, setLocalLoading] = useState<boolean>(false)
 
   const pages = [
     {
@@ -76,6 +87,18 @@ export default function Auth () {
     return <View style={styles(Colors).page}>{item.component}</View>
   }
 
+  const handleSubmit = () => {
+    if (!isButtonActive || localLoading) return
+    setLocalLoading(true)
+    setTimeout(() => {
+      if (activePage === 0) {
+        loginSubmitRef.current?.()
+      } else {
+        registerSubmitRef.current?.()
+      }
+      setLocalLoading(false)
+    }, 500)
+  }
   const AuthTab = ({ goToPage, scrollX }: any) => {
     const Colors = useThemeColor()
     const insetTop = useSafeAreaInsets().top
@@ -163,18 +186,13 @@ export default function Auth () {
         }}
       >
         <Pressable
-          onPress={() => {
-            if (activePage === 0) {
-              loginSubmitRef.current?.()
-            } else {
-              registerSubmitRef.current?.()
-            }
-          }}
+          onPress={handleSubmit}
           disabled={!isButtonActive}
           style={{
-            backgroundColor: isButtonActive
-              ? Colors.primary
-              : Colors.Boxbackground04,
+            backgroundColor:
+              isButtonActive && !localLoading
+                ? Colors.primary
+                : Colors.Boxbackground04,
             height: 55,
             width: Screens.width - Spacing.horizontal * 2,
             borderRadius: 20,
@@ -183,7 +201,11 @@ export default function Auth () {
           }}
         >
           <AppText variant='semiBold' style={{ fontSize: 18, color: 'white' }}>
-            Yuborish
+            {localLoading || isLoading ? (
+              <ActivityIndicator size='large' color={Colors.primary} />
+            ) : (
+              'Yuborish'
+            )}
           </AppText>
         </Pressable>
       </View>

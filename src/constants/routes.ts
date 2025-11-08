@@ -15,7 +15,9 @@ export const AppRoutes = {
   },
 
   customer: {
-    index: '(app)/customer'
+    getOrder: {
+      index: '(app)/customer/get-order/'
+    }
   },
 
   driver: {

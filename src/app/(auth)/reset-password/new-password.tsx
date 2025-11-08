@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Keyboard,
   Pressable,
   TouchableWithoutFeedback,
@@ -14,14 +15,16 @@ import { router } from 'expo-router'
 import { AppRoutes } from '@/constants/routes'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import AppText from '@/components/text'
-import { useMemo } from 'react'
-import { Ionicons } from '@expo/vector-icons'
+import { useMemo, useState } from 'react'
 import useThemeColor from '@/theme/useTheme'
+import { newPassword } from '@/service/user/new-password/type'
 
 const ResetPasswordNewPassword = () => {
   const [_newPassState, setNewPasswordState] = useAtom(newPasswordAtom)
   const insetBottom = useSafeAreaInsets().bottom
   const Colors = useThemeColor()
+  const [loading, setLoading] = useState<boolean>(false)
+  const [{ isLoading }] = useAtom(newPassword)
 
   const { control, handleSubmit } = useForm({
     defaultValues: { new_password: '', confirm_password: '' }
@@ -67,7 +70,9 @@ const ResetPasswordNewPassword = () => {
           backgroundColor: active ? Colors.primary : 'transparent'
         }}
       >
-        {active && <Ionicons name='checkmark' size={18} color='white' />}
+        {active && (
+          <AppText style={{ color: 'white', fontWeight: 'bold' }}>✓</AppText>
+        )}
       </View>
       <AppText
         variant='semiBold'
@@ -79,8 +84,12 @@ const ResetPasswordNewPassword = () => {
   )
 
   const onSubmit = (data: any) => {
-    setNewPasswordState(data.new_password)
-    router.replace(AppRoutes.auth.auth)
+    setLoading(true)
+    setTimeout(() => {
+      setNewPasswordState(data.new_password)
+      setLoading(false)
+      router.replace(AppRoutes.auth.auth)
+    }, 1500)
   }
 
   return (
@@ -103,6 +112,7 @@ const ResetPasswordNewPassword = () => {
                 label='Yangi parol'
                 onChangeText={onChange}
                 value={value}
+                isPassword
               />
             )}
           />
@@ -114,6 +124,7 @@ const ResetPasswordNewPassword = () => {
                 label='Parolni qata kiriting'
                 onChangeText={onChange}
                 value={value}
+                isPassword
               />
             )}
           />
@@ -126,16 +137,19 @@ const ResetPasswordNewPassword = () => {
             }}
           >
             <CheckRow
-              label='Kamida 1ta KATTA harf'
+              label='Kamida 1 ta KATTA harf'
               active={passwordCheckbox.upperCase}
             />
             <CheckRow
-              label='Kamida 1ta kichik harf'
+              label='Kamida 1 ta kichik harf'
               active={passwordCheckbox.lowerCase}
             />
-            <CheckRow label='Kamida 1ta son' active={passwordCheckbox.number} />
             <CheckRow
-              label='Kamida 8ta belgi'
+              label='Kamida 1 ta son'
+              active={passwordCheckbox.number}
+            />
+            <CheckRow
+              label='Kamida 8 ta belgi'
               active={passwordCheckbox.length}
             />
           </View>
@@ -156,11 +170,10 @@ const ResetPasswordNewPassword = () => {
           >
             <Pressable
               onPress={handleSubmit(onSubmit)}
-              disabled={!isValid}
+              disabled={!isValid || loading}
               style={{
-                backgroundColor: isValid
-                  ? Colors.primary
-                  : Colors.Boxbackground04,
+                backgroundColor:
+                  isValid && !loading ? Colors.primary : Colors.Boxbackground04,
                 height: 55,
                 width: Screens.width - Spacing.horizontal * 2,
                 borderRadius: 20,
@@ -168,12 +181,16 @@ const ResetPasswordNewPassword = () => {
                 alignItems: 'center'
               }}
             >
-              <AppText
-                variant='semiBold'
-                style={{ fontSize: 18, color: 'white' }}
-              >
-                Yuborish
-              </AppText>
+              {loading || isLoading ? (
+                <ActivityIndicator size='large' color={Colors.primary} />
+              ) : (
+                <AppText
+                  variant='semiBold'
+                  style={{ fontSize: 18, color: 'white' }}
+                >
+                  Yuborish
+                </AppText>
+              )}
             </Pressable>
           </View>
         </View>

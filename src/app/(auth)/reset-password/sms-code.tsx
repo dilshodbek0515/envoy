@@ -10,12 +10,16 @@ import useThemeColor from '@/theme/useTheme'
 import { Colors, Screens } from '@/shared/tokens'
 import CountdownTimer from '@/widget/auth/login/timer'
 import { resetPasswordPhone } from '@/service/user/controller/controller'
+import { vibration } from '@/utils/haptics'
 
 const ResetPasswordSmsCode = () => {
   const phoneNumber = useAtomValue(resetPasswordPhone)
   const smsCode = useAtomValue(resetPasswordSms)
   const [inputCode, setInputCode] = useState('')
   const Colors = useThemeColor()
+  const shakeAnim = useRef(new Animated.Value(0)).current
+  const [isError, setIsError] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false)
 
   const buttons = [
     [1, 2, 3],
@@ -35,13 +39,55 @@ const ResetPasswordSmsCode = () => {
     }
   }
 
+  const startShake = () => {
+    Animated.sequence([
+      Animated.timing(shakeAnim, {
+        toValue: 10,
+        duration: 50,
+        useNativeDriver: true
+      }),
+      Animated.timing(shakeAnim, {
+        toValue: -10,
+        duration: 50,
+        useNativeDriver: true
+      }),
+      Animated.timing(shakeAnim, {
+        toValue: 6,
+        duration: 50,
+        useNativeDriver: true
+      }),
+      Animated.timing(shakeAnim, {
+        toValue: -6,
+        duration: 50,
+        useNativeDriver: true
+      }),
+      Animated.timing(shakeAnim, {
+        toValue: 0,
+        duration: 50,
+        useNativeDriver: true
+      })
+    ]).start()
+  }
+
   useEffect(() => {
-    if (inputCode.length > 3) {
-      if (inputCode === smsCode) {
-        router.replace(AppRoutes.auth.resetPassword.newPassword)
-      } else {
-        setInputCode('')
-      }
+    if (inputCode.length === 4) {
+      const timer = setTimeout(() => {
+        if (inputCode === smsCode) {
+          setIsSuccess(true)
+          setTimeout(() => {
+            router.replace(AppRoutes.auth.resetPassword.newPassword)
+          }, 400)
+        } else {
+          setIsError(true)
+          startShake()
+          setTimeout(() => {
+            setInputCode('')
+            setIsError(false)
+            vibration.heavy
+          }, 400)
+        }
+      }, 500)
+      return () => clearTimeout(timer)
     }
   }, [inputCode])
 
@@ -64,11 +110,13 @@ const ResetPasswordSmsCode = () => {
         >
           {phoneNumber || '+998 99 999 99 99'}
         </AppText>
-        <View
+
+        <Animated.View
           style={{
             flexDirection: 'row',
             gap: 10,
-            marginBottom: 300
+            marginBottom: 300,
+            transform: [{ translateX: shakeAnim }]
           }}
         >
           {[1, 2, 3, 4].map((_, index) => {
@@ -82,15 +130,32 @@ const ResetPasswordSmsCode = () => {
                     borderRadius: 20,
                     backgroundColor: Colors.Boxbackground,
                     alignItems: 'center',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
+                    borderWidth: isError || isSuccess ? 1 : 0,
+                    borderColor: isError
+                      ? 'red'
+                      : isSuccess
+                      ? 'green'
+                      : 'transparent'
                   }
                 ]}
               >
-                <AppText style={{ fontSize: 30 }}>{inputCode[index]}</AppText>
+                <AppText
+                  style={{
+                    fontSize: 30,
+                    color: isError
+                      ? 'red'
+                      : isSuccess
+                      ? 'green'
+                      : Colors.textPrimary
+                  }}
+                >
+                  {inputCode[index]}
+                </AppText>
               </View>
             )
           })}
-        </View>
+        </Animated.View>
 
         <View
           style={{
@@ -131,7 +196,10 @@ const ResetPasswordSmsCode = () => {
                   <AnimatedButton
                     key={buttonValue}
                     label={buttonValue.toString()}
-                    onPress={() => handlePress(buttonValue.toString())}
+                    onPress={() => {
+                      handlePress(buttonValue.toString())
+                      vibration.heavy()
+                    }}
                     color={Colors.Boxbackground}
                   />
                 ))}
