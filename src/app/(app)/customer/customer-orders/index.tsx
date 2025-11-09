@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 import React from 'react'
 import AppText from '@/components/text'
 import { useSetAtom } from 'jotai'
@@ -19,5 +19,3 @@ const CustomerOrders = () => {
 }
 
 export default CustomerOrders
-
-const styles = StyleSheet.create({})

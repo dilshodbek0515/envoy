@@ -43,7 +43,8 @@ const index = () => {
 
         if (access && role === 'Customer')
           route = AppRoutes.customer.getOrder.index
-        else if (access && role === 'Driver') route = AppRoutes.driver.index
+        else if (access && role === 'Driver')
+          route = AppRoutes.driver.loads.index
         setNextRoute(route)
       } catch (error) {
         setNextRoute(AppRoutes.auth.auth)

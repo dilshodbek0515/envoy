@@ -2,16 +2,12 @@ import React, { useMemo } from 'react'
 import { Stack, usePathname } from 'expo-router'
 import useThemeColor from '@/theme/useTheme'
 
-const CustomerOrdersLayout = () => {
-  const pathName = usePathname()
+const DriverLoadsLayout = () => {
   const Colors = useThemeColor()
+  const pathName = usePathname()
 
   const visableRoutes = useMemo(
-    () => [
-      '/customer/customer-orders',
-      '/customer/get-order',
-      '/customer/profile'
-    ],
+    () => ['/driver/driver-loads', '/driver/settings'],
     [pathName]
   )
 
@@ -29,4 +25,4 @@ const CustomerOrdersLayout = () => {
   )
 }
 
-export default CustomerOrdersLayout
+export default DriverLoadsLayout

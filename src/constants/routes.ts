@@ -21,6 +21,8 @@ export const AppRoutes = {
   },
 
   driver: {
-    index: '(app)/driver'
+    loads: {
+      index: '(app)/driver/loads/'
+    }
   }
 }

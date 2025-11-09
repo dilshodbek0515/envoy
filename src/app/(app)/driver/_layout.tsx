@@ -1,42 +1,38 @@
 import React, { useEffect, useMemo } from 'react'
 import { Tabs, usePathname } from 'expo-router'
-import useThemeColor from '@/theme/useTheme'
-import Feather from '@expo/vector-icons/Feather'
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6'
 import Ionicons from '@expo/vector-icons/Ionicons'
-import { BottomTabBar } from '@react-navigation/bottom-tabs'
+import useThemeColor from '@/theme/useTheme'
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming
 } from 'react-native-reanimated'
 import { Screens } from '@/shared/tokens'
-const CustomerLayout = () => {
+import { BottomTabBar } from '@react-navigation/bottom-tabs'
+const DriverLayout = () => {
   const pathName = usePathname()
   const Colors = useThemeColor()
 
   const visableRoutes = useMemo(
-    () => [
-      '/customer/customer-orders',
-      '/customer/get-order',
-      '/customer/profile'
-    ],
+    () => ['/driver/loads', '/driver/settings'],
     [pathName]
   )
 
   const showTabBar = useMemo(() => {
     return visableRoutes.includes(pathName)
-  }, [visableRoutes])
+  }, [pathName])
 
-  const botomOfset = useSharedValue(showTabBar ? 0 : Screens.height * 0.09)
+  const bottomOfset = useSharedValue(showTabBar ? 0 : Screens.height * 0.09)
 
   useEffect(() => {
-    botomOfset.value = withTiming(showTabBar ? 0 : Screens.height * 0.09, {
+    bottomOfset.value = withTiming(showTabBar ? 0 : Screens.height * 0.09, {
       duration: 300
     })
   }, [showTabBar])
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: botomOfset.value }]
+    transform: [{ translateY: bottomOfset.value }]
   }))
 
   return (
@@ -46,7 +42,7 @@ const CustomerLayout = () => {
           <BottomTabBar {...props} />
         </Animated.View>
       )}
-      initialRouteName='get-order'
+      initialRouteName='loads'
       screenOptions={{
         tabBarLabelStyle: { fontSize: 12 },
         headerShown: false,
@@ -60,29 +56,24 @@ const CustomerLayout = () => {
       }}
     >
       <Tabs.Screen
-        name='customer-orders'
+        name='loads'
         options={{
-          title: 'Yuklaringiz',
+          title: 'Yuklar',
           tabBarIcon: ({ focused, color, size }) => {
-            return <Feather name='box' size={size} color={color} />
+            return (
+              <FontAwesome6 name='boxes-stacked' size={size} color={color} />
+            )
           }
         }}
       />
       <Tabs.Screen
-        name='get-order'
+        name='settings'
         options={{
-          title: 'Buyurtma berish',
+          title: 'Sozlamalar',
           tabBarIcon: ({ focused, color, size }) => {
-            return <Feather name='plus-circle' size={size} color={color} />
-          }
-        }}
-      />
-      <Tabs.Screen
-        name='profile'
-        options={{
-          title: 'Profile',
-          tabBarIcon: ({ focused, color, size }) => {
-            return <Ionicons name='person-outline' size={size} color={color} />
+            return (
+              <Ionicons name='settings-outline' size={size} color={color} />
+            )
           }
         }}
       />
@@ -90,5 +81,4 @@ const CustomerLayout = () => {
   )
 }
 
-export default CustomerLayout
-
+export default DriverLayout

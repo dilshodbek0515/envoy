@@ -2,7 +2,7 @@ import React from 'react'
 import { Stack } from 'expo-router'
 import useThemeColor from '@/theme/useTheme'
 
-const CustomerProfileLayout = () => {
+const DriverSettingsLayout = () => {
   const Colors = useThemeColor()
   return (
     <Stack
@@ -14,4 +14,4 @@ const CustomerProfileLayout = () => {
   )
 }
 
-export default CustomerProfileLayout
+export default DriverSettingsLayout
