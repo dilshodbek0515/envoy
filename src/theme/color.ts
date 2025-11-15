@@ -13,6 +13,7 @@ export interface IThemeColors {
   textSecondary: string
   green: string
   yellow: string
+  red: string
   borderColor: string
 
   // shade versiyalar
@@ -41,6 +42,11 @@ export interface IThemeColors {
   yellow04: string
   yellow02: string
 
+  red08: string
+  red06: string
+  red04: string
+  red02: string
+
   Boxbackground08: string
   Boxbackground06: string
   Boxbackground04: string
@@ -52,62 +58,16 @@ export interface IThemeColors {
   borderColor02: string
 }
 
-// 👇 shu interfeysni ishlatib light va dark ranglarni tiplaymiz
-export const lightColors: IThemeColors = {
-  primary: '#007fff',
-  pageBackground: '#ffffff',
-  Boxbackground: '#eee',
-  textPrimary: '#1F2937',
-  textSecondary: '#6B7280',
-  green: '#22C55E',
-  yellow: '#FACC15',
-  borderColor: '#999999',
-
-  primary08: '#007fff',
-  primary06: '#339fff',
-  primary04: '#66bfff',
-  primary02: '#99dfff',
-
-  textPrimary08: '#1F2937',
-  textPrimary06: '#4A5568',
-  textPrimary04: '#718096',
-  textPrimary02: '#A0AEC0',
-
-  textSecondary08: '#6B7280',
-  textSecondary06: '#A0AEC0',
-  textSecondary04: '#CBD5E0',
-  textSecondary02: '#E2E8F0',
-
-  green08: '#22C55E',
-  green06: '#4ADE80',
-  green04: '#86EFAC',
-  green02: '#BBF7D0',
-
-  yellow08: '#FACC15',
-  yellow06: '#FDE047',
-  yellow04: '#FDE68A',
-  yellow02: '#FEF9C3',
-
-  Boxbackground08: '#FFFFFF',
-  Boxbackground06: '#F2F2F2',
-  Boxbackground04: '#E6E6E6',
-  Boxbackground02: '#D9D9D9',
-
-  borderColor08: '#999999',
-  borderColor06: '#B3B3B3',
-  borderColor04: '#CCCCCC',
-  borderColor02: '#E6E6E6'
-}
-
 export const darkColors: IThemeColors = {
   primary: '#00BEFF',
-  pageBackground: '#111111',
-  Boxbackground: '#333333',
+  pageBackground: '#171C26',
+  Boxbackground: '#262E3D',
   textPrimary: '#ffffff',
   textSecondary: '#999999',
   green: '#00ff4c',
   yellow: '#ffbd59',
-  borderColor: '#555555',
+  red: '#FF4C4C',
+  borderColor: '#2E3749',
 
   primary08: '#00BEFF',
   primary06: '#0099CC',
@@ -134,6 +94,11 @@ export const darkColors: IThemeColors = {
   yellow04: '#996E35',
   yellow02: '#664623',
 
+  red08: '#FF4C4C',
+  red06: '#CC3D3D',
+  red04: '#992E2E',
+  red02: '#661F1F',
+
   Boxbackground08: '#333333',
   Boxbackground06: '#262626',
   Boxbackground04: '#1A1A1A',
@@ -143,4 +108,58 @@ export const darkColors: IThemeColors = {
   borderColor06: '#404040',
   borderColor04: '#2B2B2B',
   borderColor02: '#1A1A1A'
+}
+
+export const lightColors: IThemeColors = {
+  primary: '#007FFF',
+  // pageBackground: "#FFFFFF",
+  // Boxbackground: "#F3F4F6",
+  pageBackground: '#F3F4F9',
+  Boxbackground: '#FFF',
+  textPrimary: '#1F2937',
+  textSecondary: '#6B7280',
+  green: '#22C55E',
+  yellow: '#FACC15',
+  red: '#EF4444',
+  borderColor: '#E5E7EB',
+
+  primary08: '#007FFF',
+  primary06: '#339FFF',
+  primary04: '#66BFFF',
+  primary02: '#CCE5FF',
+
+  textPrimary08: '#1F2937',
+  textPrimary06: '#4B5563',
+  textPrimary04: '#9CA3AF',
+  textPrimary02: '#D1D5DB',
+
+  textSecondary08: '#6B7280',
+  textSecondary06: '#9CA3AF',
+  textSecondary04: '#D1D5DB',
+  textSecondary02: '#E5E7EB',
+
+  green08: '#22C55E',
+  green06: '#4ADE80',
+  green04: '#86EFAC',
+  green02: '#DCFCE7',
+
+  yellow08: '#FACC15',
+  yellow06: '#FDE68A',
+  yellow04: '#FEF3C7',
+  yellow02: '#FFFBEB',
+
+  red08: '#EF4444',
+  red06: '#F87171',
+  red04: '#FECACA',
+  red02: '#FEE2E2',
+
+  Boxbackground08: '#F3F4F6',
+  Boxbackground06: '#E5E7EB',
+  Boxbackground04: '#D1D5DB',
+  Boxbackground02: '#F9FAFB',
+
+  borderColor08: '#E5E7EB',
+  borderColor06: '#D1D5DB',
+  borderColor04: '#9CA3AF',
+  borderColor02: '#E5E7EB'
 }

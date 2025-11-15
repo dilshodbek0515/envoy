@@ -17,6 +17,23 @@ export const AppRoutes = {
   customer: {
     getOrder: {
       index: '(app)/customer/get-order/'
+    },
+
+    profile: {
+      index: '(app)/customer/profile/',
+      notification: '(app)/customer/profile/notifications',
+
+      user: {
+        index: '(app)/customer/profile/user/'
+      },
+
+      setting: {
+        index: '(app)/customer/profile/setting/'
+      },
+
+      result: {
+        index: '(app)/customer/profile/results/'
+      }
     }
   },
 

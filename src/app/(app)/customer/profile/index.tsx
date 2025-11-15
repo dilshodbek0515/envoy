@@ -1,22 +1,212 @@
-import { View } from 'react-native'
-import React from 'react'
-import AppText from '@/components/text'
+import { Alert, Pressable, StyleSheet, View } from 'react-native'
 import PageHeader from '@/components/header/PageHeader'
+import useThemeColor from '@/theme/useTheme'
+import { IThemeColors } from '@/theme/color'
+import { Spacing } from '@/shared/tokens'
+import AppText from '@/components/text'
+import Ionicons from '@expo/vector-icons/Ionicons'
+import Closed from '@/assets/icons/close'
 import { router } from 'expo-router'
+import { AppRoutes } from '@/constants/routes'
+import safeRoute from '@/utils/safeNavigate'
+import callPhone from '@/utils/call-phone'
+import ArrowIcon from '@/assets/icons/arrow-icon'
 
 const CustomerProfile = () => {
-  // const handleLougout = useSetAtom(logoutAtom)
+  const Colors = useThemeColor()
+
+  const ProfileActions = [
+    {
+      title: 'Sozlamalar',
+      handlePress: () =>
+        safeRoute(() => router.push(AppRoutes.customer.profile.setting.index)),
+      leftIcon: () => (
+        <View style={styles(Colors).iconBox}>
+          <Ionicons
+            name='settings-sharp'
+            size={18}
+            color={Colors.textPrimary}
+          />
+        </View>
+      )
+    },
+
+    {
+      title: "Ko'rsatgichlar",
+      handlePress: () => router.push(AppRoutes.customer.profile.result.index),
+      leftIcon: () => (
+        <View style={styles(Colors).iconBox}>
+          <Ionicons
+            name='settings-sharp'
+            size={18}
+            color={Colors.textPrimary}
+          />
+        </View>
+      )
+    },
+
+    {
+      title: 'Bildirishnomalar',
+      handlePress: () => router.push(AppRoutes.customer.profile.notification),
+      leftIcon: () => (
+        <View style={styles(Colors).iconBox}>
+          <Ionicons
+            name='settings-sharp'
+            size={18}
+            color={Colors.textPrimary}
+          />
+        </View>
+      )
+    },
+
+    {
+      title: "Operator bilan bog'lanish",
+      handlePress: () => callPhone('+998975790515'),
+      leftIcon: () => (
+        <View style={styles(Colors).iconBox}>
+          <Ionicons
+            name='settings-sharp'
+            size={18}
+            color={Colors.textPrimary}
+          />
+        </View>
+      )
+    }
+  ]
+
+  const ProfileActionBox = () => {
+    const Colors = useThemeColor()
+    return (
+      <View style={styles(Colors).actionButtonsBox}>
+        {ProfileActions.map(action => {
+          return (
+            <Pressable
+              onPress={action.handlePress}
+              key={action.title}
+              style={styles(Colors).actionButton}
+            >
+              <View
+                style={{
+                  flexDirection: 'row',
+                  paddingHorizontal: 7.5,
+                  gap: Spacing.horizontal,
+                  alignItems: 'center',
+                  paddingVertical: 5
+                }}
+              >
+                <View
+                  style={{
+                    alignItems: 'center',
+                    width: 30,
+                    height: 30,
+                    justifyContent: 'center',
+                    borderRadius: 10,
+                    backgroundColor: Colors.red04
+                  }}
+                >
+                  {action.leftIcon()}
+                </View>
+                <AppText variant='medium'>{action.title}</AppText>
+              </View>
+              <ArrowIcon
+                color={Colors.textSecondary}
+                direction='right'
+                type={'chevron'}
+              />
+              {/* <Closed size={20} color='red' /> */}
+            </Pressable>
+          )
+        })}
+      </View>
+    )
+  }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: Colors.pageBackground
+      }}
+    >
       <PageHeader title='Profile' />
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <AppText onPress={() => router.push('(app)/customer/profile/settings')}>
-          Customer
-        </AppText>
+      <View style={styles(Colors).container}>
+        <ProfileUserBox />
+        <ProfileActionBox />
       </View>
     </View>
   )
 }
 
 export default CustomerProfile
+
+export const ProfileUserBox = () => {
+  const Colors = useThemeColor()
+  return (
+    <View style={styles(Colors).userBox}>
+      <View
+        style={{
+          width: 60,
+          height: 60,
+          backgroundColor: Colors.borderColor,
+          borderRadius: 30,
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <AppText variant='bold' style={{ fontSize: 35 }}>
+          D
+        </AppText>
+      </View>
+
+      <View style={{ gap: Spacing.horizontal / 2 }}>
+        <AppText variant='semiBold' style={{ fontSize: 18 }}>
+          Dilshodbek
+        </AppText>
+        <AppText style={{ fontSize: 12, color: Colors.textSecondary }}>
+          +998 97 579-05-15
+        </AppText>
+      </View>
+    </View>
+  )
+}
+
+const styles = (Colors: IThemeColors) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: Spacing.horizontal,
+      gap: Spacing.horizontal
+    },
+
+    iconBox: {
+      width: 30,
+      height: 30,
+      backgroundColor: Colors.red04,
+      borderRadius: 10,
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    userBox: {
+      backgroundColor: Colors.Boxbackground,
+      borderRadius: 20,
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+      padding: Spacing.horizontal * 2,
+      gap: Spacing.horizontal * 2,
+      flexDirection: 'row'
+    },
+
+    actionButtonsBox: {
+      gap: Spacing.horizontal
+    },
+
+    actionButton: {
+      // height: 50,
+      backgroundColor: Colors.Boxbackground,
+      borderRadius: 15,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingRight: 7.5
+    }
+  })
