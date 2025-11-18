@@ -13,6 +13,8 @@ import Animated, {
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import SplashScreenIcon from '@/assets/icons/splash-screen-icon'
 import { AppRoutes } from '@/constants/routes'
+import { useSetAtom } from 'jotai'
+import { themeAtom } from '@/theme/theme'
 
 const index = () => {
   const router = useRouter()
@@ -20,6 +22,11 @@ const index = () => {
   const [authReady, setAuthReady] = useState(false)
   const [nextRoute, setNextRoute] = useState<string | null>(null)
   const scale = useSharedValue(0)
+  const setTheme = useSetAtom(themeAtom)
+
+  useEffect(() => {
+    setTheme('dark')
+  }, [])
 
   const [fontsLoaded, fontsError] = useFonts({
     'Inter-Regular': require('@/assets/fonts/Inter_18pt-Regular.ttf'),
