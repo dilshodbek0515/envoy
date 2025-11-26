@@ -15,6 +15,7 @@ import { AppRoutes } from '@/constants/routes'
 import { registerAtom } from '@/widget/auth/register/register'
 import { checkPhone } from '../check-phone/type'
 import { sendSms } from '../send-sms/type'
+import { tokenManager } from '@/axios/tokenManager'
 
 const storage = createJSONStorage<IAuthResponse>(() => AsyncStorage)
 const auth = atomWithStorage<IAuthResponse>('authData', defualt, storage)
@@ -46,6 +47,8 @@ export const authAtom = atom(
       }
 
       console.log('data ----->', data.access)
+
+      await tokenManager.set(data?.access)
 
       set(authStateAtom, {
         isLoading: false,

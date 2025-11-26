@@ -1,5 +1,6 @@
 import {
   Alert,
+  Image,
   Platform,
   Pressable,
   ScrollView,
@@ -23,13 +24,20 @@ import CustomBottomSheetModal from '@/components/BottomSheets'
 import { BottomSheetModalMethods } from '@gorhom/bottom-sheet/lib/typescript/types'
 import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import PageHeader from '@/components/header/PageHeader'
+import * as ImagePicker from 'expo-image-picker'
 const User = () => {
   const Colors = useThemeColor()
   const insetTop = useSafeAreaInsets().top
   const [editMode, setEditMode] = useState(false)
   const [name, setName] = useState('Dilshodbek')
+  const [orginalName, setOrginalName] = useState('Dilshodbek')
   const [phone, setPhone] = useState('+998 90 392-36-25')
-  const chooseMediaSheetRef = useRef<BottomSheetModalMethods>(null)
+
+  const [image, setImage] = useState<any>({
+    uri: null,
+    fileName: null,
+    mimeType: null
+  })
 
   const rating = {
     score: 2.5,
@@ -65,6 +73,9 @@ const User = () => {
     }
   })
 
+
+   
+
   return (
     <View style={{ flex: 1 }}>
       <Animated.View style={headerAnimatedStyle}>
@@ -78,102 +89,12 @@ const User = () => {
       </Animated.View>
 
       <ScrollView contentContainerStyle={{ gap: Spacing.horizontal }}>
-        <Animated.View
-          style={[
-            {
-              height: Screens.height * 0.4,
-              backgroundColor: Colors.Boxbackground,
-              borderBottomLeftRadius: 20,
-              borderBottomRightRadius: 20,
-              paddingTop: insetTop,
-              overflow: 'hidden'
-            },
-            photoAnimatedStyle
-          ]}
-        >
-          <View
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-          >
-            <AppText variant='bold' style={{ fontSize: 80 }}>
-              D
-            </AppText>
-          </View>
-
-          <Pressable
-            onPress={() => router.back()}
-            style={{
-              position: 'absolute',
-              top: 10 + insetTop,
-              left: 10,
-              width: 40,
-              height: 40,
-              backgroundColor: Colors.borderColor,
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: 10
-            }}
-          >
-            <ArrowIcon
-              color={Colors.textSecondary}
-              type={Platform.OS === 'ios' ? 'chevron' : 'arrow'}
-            />
-          </Pressable>
-
-          <View
-            style={{
-              position: 'absolute',
-              bottom: 10,
-              right: 10,
-              height: 40,
-              backgroundColor: Colors.borderColor,
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: 10,
-              flexDirection: 'row',
-              gap: 3
-            }}
-          >
-            <Pressable
-              onPress={() => setEditMode($ => !$)}
-              style={{
-                width: 40,
-                height: 40,
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-            >
-              <MaterialIcons
-                name='edit'
-                size={22}
-                color={Colors.textSecondary}
-              />
-            </Pressable>
-
-            <View
-              style={{
-                width: 1,
-                backgroundColor: Colors.textSecondary,
-                height: 20
-              }}
-            />
-
-            <Pressable
-              onPress={() => chooseMediaSheetRef.current?.present()}
-              style={{
-                width: 40,
-                height: 40,
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-            >
-              <Entypo name='camera' size={24} color={Colors.textSecondary} />
-            </Pressable>
-          </View>
-        </Animated.View>
+        <AvatarBox
+          editMode={editMode}
+          setEditMode={setEditMode}
+          image={image}
+          setImage={setImage}
+        />
 
         <Animated.View
           style={[
@@ -206,46 +127,6 @@ const User = () => {
           )}
         </Animated.View>
       </ScrollView>
-
-      <CustomBottomSheetModal ref={chooseMediaSheetRef} snapPoints={['40%']}>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            padding: Spacing.horizontal,
-            gap: Spacing.horizontal
-          }}
-        >
-          <Pressable
-            style={{
-              flex: 1,
-              height: 90,
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: Colors.borderColor,
-              borderRadius: 20,
-              gap: Spacing.horizontal / 2
-            }}
-          >
-            <MaterialIcons name='photo' size={35} color={Colors.textPrimary} />
-            <AppText>Galereya</AppText>
-          </Pressable>
-          <Pressable
-            style={{
-              flex: 1,
-              height: 90,
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: Colors.borderColor,
-              borderRadius: 20,
-              gap: Spacing.horizontal / 2
-            }}
-          >
-            <Entypo name='camera' size={35} color={Colors.textPrimary} />
-            <AppText>Kamera</AppText>
-          </Pressable>
-        </View>
-      </CustomBottomSheetModal>
     </View>
   )
 }
@@ -472,5 +353,225 @@ const UserCommentRow = ({ comment }: { comment: string[] }) => {
         <View></View>
       </CustomBottomSheetModal>
     </Pressable>
+  )
+}
+
+const AvatarBox = ({
+  editMode,
+  setEditMode,
+  image,
+  setImage
+}: {
+  editMode: boolean
+  image: {
+    uri: string
+    fileName: string
+    mimeType: string
+  }
+  setEditMode: (mode: boolean) => void
+  setImage: any
+}) => {
+  const Colors = useThemeColor()
+  const insetTop = useSafeAreaInsets().top
+  const chooseMediaSheetRef = useRef<BottomSheetModalMethods>(null)
+
+  const photoAnimatedStyle = useAnimatedStyle(() => {
+    const marginTop = withTiming(!editMode ? 0 : -Screens.height * 0.4, {
+      duration: 300
+    })
+    return {
+      marginTop
+    }
+  })
+
+  const pickFromCamera = async () => {
+    try {
+      const { status } = await ImagePicker.requestCameraPermissionsAsync()
+      if (status !== 'granted') {
+        alert('Kamera uchun ruxsat bering.')
+        return
+      }
+
+      const result = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.8
+      })
+
+      if (!result.canceled && result.assets?.length > 0) {
+        setImage({
+          uri: result.assets[0].uri,
+          fileName: result?.assets[0]?.fileName,
+          mimeType: result?.assets[0]?.mimeType
+        })
+        chooseMediaSheetRef.current?.dismiss()
+      }
+    } catch (error) {}
+  }
+
+  const pickFromGallery = async () => {
+    try {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
+      if (status !== 'granted') {
+        alert('Galleriyaga kirish uchun ruxsat bering')
+        return
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.8
+      })
+
+      if (!result.canceled && result.assets?.length > 0) {
+        setImage({
+          uri: result.assets[0].uri,
+          fileName: result?.assets[0]?.fileName,
+          mimeType: result?.assets[0]?.mimeType
+        })
+        chooseMediaSheetRef.current?.dismiss()
+      }
+    } catch (error) {}
+  }
+
+  return (
+    <Animated.View
+      style={[
+        {
+          height: Screens.height * 0.4,
+          backgroundColor: Colors.Boxbackground,
+          borderBottomLeftRadius: 20,
+          borderBottomRightRadius: 20,
+          overflow: 'hidden'
+        },
+        photoAnimatedStyle
+      ]}
+    >
+      {image.uri ? (
+        <Image source={{ uri: image.uri }} style={{ flex: 1 }} />
+      ) : (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          <AppText variant='bold' style={{ fontSize: 80 }}>
+            D
+          </AppText>
+        </View>
+      )}
+
+      <Pressable
+        onPress={() => router.back()}
+        style={{
+          position: 'absolute',
+          top: 10 + insetTop,
+          left: 10,
+          width: 40,
+          height: 40,
+          backgroundColor: Colors.borderColor,
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderRadius: 10
+        }}
+      >
+        <ArrowIcon
+          color={Colors.textSecondary}
+          type={Platform.OS === 'ios' ? 'chevron' : 'arrow'}
+        />
+      </Pressable>
+
+      <View
+        style={{
+          position: 'absolute',
+          bottom: 10,
+          right: 10,
+          height: 40,
+          backgroundColor: Colors.borderColor,
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderRadius: 10,
+          flexDirection: 'row',
+          gap: 3
+        }}
+      >
+        <Pressable
+          onPress={() => setEditMode(true)}
+          style={{
+            width: 40,
+            height: 40,
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <MaterialIcons name='edit' size={22} color={Colors.textSecondary} />
+        </Pressable>
+
+        <View
+          style={{
+            width: 1,
+            backgroundColor: Colors.textSecondary,
+            height: 20
+          }}
+        />
+
+        <Pressable
+          onPress={() => chooseMediaSheetRef.current?.present()}
+          style={{
+            width: 40,
+            height: 40,
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <Entypo name='camera' size={24} color={Colors.textSecondary} />
+        </Pressable>
+      </View>
+
+      <CustomBottomSheetModal ref={chooseMediaSheetRef} snapPoints={['50%']}>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            padding: Spacing.horizontal,
+            gap: Spacing.horizontal
+          }}
+        >
+          <Pressable
+            onPress={pickFromGallery}
+            style={{
+              flex: 1,
+              height: 90,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: Colors.borderColor,
+              borderRadius: 20,
+              gap: Spacing.horizontal / 2
+            }}
+          >
+            <MaterialIcons name='photo' size={35} color={Colors.textPrimary} />
+            <AppText>Galereya</AppText>
+          </Pressable>
+          <Pressable
+            onPress={pickFromCamera}
+            style={{
+              flex: 1,
+              height: 90,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: Colors.borderColor,
+              borderRadius: 20,
+              gap: Spacing.horizontal / 2
+            }}
+          >
+            <Entypo name='camera' size={35} color={Colors.textPrimary} />
+            <AppText>Kamera</AppText>
+          </Pressable>
+        </View>
+      </CustomBottomSheetModal>
+    </Animated.View>
   )
 }

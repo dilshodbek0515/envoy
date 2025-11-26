@@ -5,6 +5,7 @@ import useThemeColor from '@/theme/useTheme'
 
 const CustomerGetOrdersLayout = () => {
   const Colors = useThemeColor()
+
   return (
     <Stack
       screenOptions={{

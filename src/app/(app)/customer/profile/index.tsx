@@ -13,8 +13,13 @@ import ArrowIcon from '@/assets/icons/arrow-icon'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { useAtomValue } from 'jotai'
+import { userDataAtom } from '@/service/user/fetch-profile/controller'
+
 const CustomerProfile = () => {
   const Colors = useThemeColor()
+  const profile = useAtomValue(userDataAtom)
+  console.log(profile)
 
   const ProfileActions = [
     {
