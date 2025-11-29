@@ -27,16 +27,16 @@ const PageHeader = ({
   const height = Screens.height * 0.067
 
   const handleRightPress = () => {
-    if (onRightPress) {
-      onRightPress()
+    if (onLeftPress) {
+      onLeftPress()
     } else {
       router.back()
     }
   }
 
   const handleLeftPress = () => {
-    if (onLeftPress) {
-      onLeftPress()
+    if (onRightPress) {
+      onRightPress()
     }
   }
 

@@ -7,11 +7,16 @@ import useThemeColor from '@/theme/useTheme'
 import safeRoute from '@/utils/safeNavigate'
 import { router } from 'expo-router'
 import { useAtomValue } from 'jotai'
-import { Pressable, StyleSheet, View } from 'react-native'
+import { Image, Pressable, StyleSheet, View } from 'react-native'
 
 export default function ProfileUserBox () {
   const Colors = useThemeColor()
-  const { username, phone } = useAtomValue(userDataAtom)
+  const { username, phone, image: originalImage } = useAtomValue(userDataAtom)
+
+  const urlImage = originalImage
+    ? process.env.EXPO_PUBLIC_PREFIX + originalImage
+    : originalImage
+
   return (
     <Pressable
       onPress={() =>
@@ -29,9 +34,13 @@ export default function ProfileUserBox () {
           justifyContent: 'center'
         }}
       >
-        <AppText variant='bold' style={{ fontSize: 35 }}>
-          {username?.slice(0, 1)}
-        </AppText>
+        {urlImage ? (
+          <Image source={{ uri: urlImage }} style={{ flex: 1 }} />
+        ) : (
+          <AppText variant='bold' style={{ fontSize: 35 }}>
+            {username?.slice(0, 1)}
+          </AppText>
+        )}
       </View>
 
       <View style={{ gap: Spacing.horizontal / 2 }}>
