@@ -1,4 +1,10 @@
-import { Pressable, StyleSheet, View } from 'react-native'
+import {
+  Pressable,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  View
+} from 'react-native'
 import PageHeader from '@/components/header/PageHeader'
 import useThemeColor from '@/theme/useTheme'
 import { IThemeColors } from '@/theme/color'
@@ -8,18 +14,19 @@ import { router } from 'expo-router'
 import { AppRoutes } from '@/constants/routes'
 import safeRoute from '@/utils/safeNavigate'
 import callPhone from '@/utils/call-phone'
-import Ionicons from '@expo/vector-icons/Ionicons'
 import ArrowIcon from '@/assets/icons/arrow-icon'
-import FontAwesome from '@expo/vector-icons/FontAwesome'
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
-import { useAtomValue } from 'jotai'
-import { userDataAtom } from '@/service/user/fetch-profile/controller'
+import ProfileUserBox from '@/widget/profile/profile-user-box'
+import { useState } from 'react'
+import { useFetchUserData } from '@/service/user/fetch-profile/controller'
+import SettingsIcon from '@/assets/icons/settings-icon'
+import RatingIcon from '@/assets/icons/rating-icon'
+import NotificationIcon from '@/assets/icons/notification.icon'
+import CallIcon from '@/assets/icons/call-icon'
 
 const CustomerProfile = () => {
   const Colors = useThemeColor()
-  const profile = useAtomValue(userDataAtom)
-  console.log(profile)
+  const [refresh, setRefresh] = useState(false)
+  const fetchProfile = useFetchUserData()
 
   const ProfileActions = [
     {
@@ -28,11 +35,7 @@ const CustomerProfile = () => {
         safeRoute(() => router.push(AppRoutes.customer.profile.setting.index)),
       leftIcon: () => (
         <View style={styles(Colors).iconBox}>
-          <Ionicons
-            name='settings-sharp'
-            size={18}
-            color={Colors.textPrimary}
-          />
+          <SettingsIcon size={22} color={Colors.textPrimary} />
         </View>
       )
     },
@@ -42,7 +45,7 @@ const CustomerProfile = () => {
       handlePress: () => router.push(AppRoutes.customer.profile.result.index),
       leftIcon: () => (
         <View style={styles(Colors).iconBox}>
-          <FontAwesome6 name='chart-simple' size={18} color={Colors.primary} />
+          <RatingIcon size={22} color={Colors.primary} />
         </View>
       )
     },
@@ -52,7 +55,7 @@ const CustomerProfile = () => {
       handlePress: () => router.push(AppRoutes.customer.profile.notification),
       leftIcon: () => (
         <View style={styles(Colors).iconBox}>
-          <FontAwesome name='bell' size={18} color={Colors.textPrimary} />
+          <NotificationIcon size={22} color={Colors.textPrimary} />
         </View>
       )
     },
@@ -62,7 +65,7 @@ const CustomerProfile = () => {
       handlePress: () => callPhone('+998975790515'),
       leftIcon: () => (
         <View style={styles(Colors).iconBox}>
-          <MaterialIcons name='call' size={18} color={Colors.green} />
+          <CallIcon size={22} color={Colors.green} />
         </View>
       )
     }
@@ -122,12 +125,16 @@ const CustomerProfile = () => {
                 direction='right'
                 type={'chevron'}
               />
-              {/* <Closed size={20} color='red' /> */}
             </Pressable>
           )
         })}
       </View>
     )
+  }
+
+  const handleRefresh = async () => {
+    setRefresh(true)
+    await fetchProfile().then(() => setRefresh(false))
   }
 
   return (
@@ -139,50 +146,27 @@ const CustomerProfile = () => {
     >
       <PageHeader title='Profile' />
       <View style={styles(Colors).container}>
-        <ProfileUserBox />
-        <ProfileActionBox />
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={refresh}
+              onRefresh={handleRefresh}
+              tintColor={'red'}
+              colors={['#fff']}
+              progressBackgroundColor={Colors.borderColor}
+            />
+          }
+          contentContainerStyle={{ gap: Spacing.horizontal }}
+        >
+          <ProfileUserBox />
+          <ProfileActionBox />
+        </ScrollView>
       </View>
     </View>
   )
 }
 
 export default CustomerProfile
-
-export const ProfileUserBox = () => {
-  const Colors = useThemeColor()
-  return (
-    <Pressable
-      onPress={() =>
-        safeRoute(() => router.push(AppRoutes.customer.profile.user.index))
-      }
-      style={styles(Colors).userBox}
-    >
-      <View
-        style={{
-          width: 60,
-          height: 60,
-          backgroundColor: Colors.borderColor,
-          borderRadius: 30,
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
-      >
-        <AppText variant='bold' style={{ fontSize: 35 }}>
-          D
-        </AppText>
-      </View>
-
-      <View style={{ gap: Spacing.horizontal / 2 }}>
-        <AppText variant='semiBold' style={{ fontSize: 18 }}>
-          Dilshodbek
-        </AppText>
-        <AppText style={{ fontSize: 12, color: Colors.textSecondary }}>
-          +998 97 579-05-15
-        </AppText>
-      </View>
-    </Pressable>
-  )
-}
 
 const styles = (Colors: IThemeColors) =>
   StyleSheet.create({
@@ -200,15 +184,6 @@ const styles = (Colors: IThemeColors) =>
       alignItems: 'center',
       justifyContent: 'center'
     },
-    userBox: {
-      backgroundColor: Colors.Boxbackground,
-      borderRadius: 20,
-      justifyContent: 'flex-start',
-      alignItems: 'center',
-      padding: Spacing.horizontal * 2,
-      gap: Spacing.horizontal * 2,
-      flexDirection: 'row'
-    },
 
     actionButtonsBox: {
       gap: Spacing.horizontal
@@ -221,6 +196,7 @@ const styles = (Colors: IThemeColors) =>
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      paddingRight: 7.5
+      paddingRight: 7.5,
+      gap: 10
     }
   })

@@ -1,8 +1,6 @@
 import React, { useEffect, useMemo } from 'react'
 import { Tabs, usePathname } from 'expo-router'
 import useThemeColor from '@/theme/useTheme'
-import Feather from '@expo/vector-icons/Feather'
-import Ionicons from '@expo/vector-icons/Ionicons'
 import { BottomTabBar } from '@react-navigation/bottom-tabs'
 import Animated, {
   useAnimatedStyle,
@@ -10,6 +8,9 @@ import Animated, {
   withTiming
 } from 'react-native-reanimated'
 import { Screens } from '@/shared/tokens'
+import ProfileIcon from '@/assets/icons/profile-icon'
+import GetOrderIcon from '@/assets/icons/get-order-icon'
+import CustomerOrdersIcon from '@/assets/icons/customer-orders-icon'
 const CustomerLayout = () => {
   const pathName = usePathname()
   const Colors = useThemeColor()
@@ -55,7 +56,8 @@ const CustomerLayout = () => {
         tabBarStyle: {
           backgroundColor: Colors.Boxbackground,
           borderTopWidth: 0,
-          height: Screens.height * 0.09
+          height: Screens.height * 0.09,
+          position: 'absolute'
         }
       }}
     >
@@ -64,7 +66,7 @@ const CustomerLayout = () => {
         options={{
           title: 'Yuklaringiz',
           tabBarIcon: ({ focused, color, size }) => {
-            return <Feather name='box' size={size} color={color} />
+            return <CustomerOrdersIcon size={size} color={color} />
           }
         }}
       />
@@ -73,7 +75,7 @@ const CustomerLayout = () => {
         options={{
           title: 'Buyurtma berish',
           tabBarIcon: ({ focused, color, size }) => {
-            return <Feather name='plus-circle' size={size} color={color} />
+            return <GetOrderIcon size={size} color={color} />
           }
         }}
       />
@@ -82,7 +84,7 @@ const CustomerLayout = () => {
         options={{
           title: 'Profile',
           tabBarIcon: ({ focused, color, size }) => {
-            return <Ionicons name='person-outline' size={size} color={color} />
+            return <ProfileIcon size={size} color={color} />
           }
         }}
       />
@@ -91,4 +93,3 @@ const CustomerLayout = () => {
 }
 
 export default CustomerLayout
-

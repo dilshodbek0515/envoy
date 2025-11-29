@@ -1,10 +1,9 @@
-import { View, Text } from 'react-native'
 import React, { forwardRef, ReactNode, useCallback } from 'react'
 import {
-  BottomSheetBackdrop,
+  BottomSheetModalProps,
   BottomSheetBackdropProps,
-  BottomSheetModal,
-  BottomSheetModalProps
+  BottomSheetBackdrop,
+  BottomSheetModal
 } from '@gorhom/bottom-sheet'
 import { BottomSheetModalMethods } from '@gorhom/bottom-sheet/lib/typescript/types'
 import useThemeColor from '@/theme/useTheme'
