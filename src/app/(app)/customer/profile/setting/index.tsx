@@ -28,6 +28,10 @@ import AppText from '@/components/text'
 import { IThemeColors } from '@/theme/color'
 import ThemeSwitch from '@/components/ThemeSwitch/ThemeSwitch'
 import SheetModal from '@/components/SheetModal'
+import LanguageIcon from '@/assets/icons/language-icon'
+import DeleteIcon from '@/assets/icons/delete-icon'
+import LogoutIcon from '@/assets/icons/logout-icon'
+import ThemeIcon from '@/assets/icons/theme-icon'
 
 const Settings = () => {
   const Colors = useThemeColor()
@@ -56,7 +60,7 @@ const Settings = () => {
         // title:t('theme_mode')
         title: 'theme',
         icon: (size: number, color: string) => (
-          <CopyIcon size={size} color={color} />
+          <ThemeIcon size={size} color={color} />
         ),
         leftNode: () => (
           <ThemeSwitch isDark={theme === 'dark'} onToggle={toggleTheme} />
@@ -65,11 +69,11 @@ const Settings = () => {
       },
       {
         id: 'language',
-        // title:t('change_language')
+        // title:t('hello'),
         title: 'language',
         leftNode: () => null,
         icon: (size: number, color: string) => (
-          <CopyIcon size={size} color={color} />
+          <LanguageIcon size={size} color={color} />
         ),
         onPress: () => handleNavigate(AppRoutes.customer.profile.setting.index)
       },
@@ -79,7 +83,7 @@ const Settings = () => {
         title: 'logout',
         leftNode: () => <></>,
         icon: (size: number, color: string) => (
-          <CopyIcon size={size} color={color} />
+          <LogoutIcon size={size} color={color} />
         ),
         onPress: () => (setActionType('logout'), setAlertVisable(true))
       },
@@ -89,7 +93,7 @@ const Settings = () => {
         title: 'delete',
         leftNode: () => <></>,
         icon: (size: number, color: string) => (
-          <CopyIcon size={size} color={color} />
+          <DeleteIcon size={size} color={color} />
         ),
         onPress: () => (setActionType('delete_acc'), setAlertVisable(true))
       }
@@ -126,7 +130,7 @@ const Settings = () => {
         { backgroundColor: Colors.pageBackground }
       ]}
     >
-      <PageHeader title='settings' isEnabledBack />
+      <PageHeader title='Settings' isEnabledBack />
 
       <FlatList
         style={{

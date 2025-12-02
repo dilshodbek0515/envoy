@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo } from 'react'
-import { Tabs, usePathname } from 'expo-router'
+import React, { useEffect, useMemo, useState } from 'react'
+import { Tabs, usePathname, useRouter } from 'expo-router'
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import useThemeColor from '@/theme/useTheme'
@@ -10,9 +10,11 @@ import Animated, {
 } from 'react-native-reanimated'
 import { Screens } from '@/shared/tokens'
 import { BottomTabBar } from '@react-navigation/bottom-tabs'
+import { InteractionManager } from 'react-native'
 const DriverLayout = () => {
   const pathName = usePathname()
   const Colors = useThemeColor()
+  const router = useRouter()
 
   const visableRoutes = useMemo(
     () => ['/driver/loads', '/driver/settings'],
@@ -23,17 +25,25 @@ const DriverLayout = () => {
     return visableRoutes.includes(pathName)
   }, [pathName])
 
+  const [ready, setReady] = useState(false)
   const bottomOfset = useSharedValue(showTabBar ? 0 : Screens.height * 0.09)
 
   useEffect(() => {
-    bottomOfset.value = withTiming(showTabBar ? 0 : Screens.height * 0.09, {
-      duration: 300
+    const task = InteractionManager.runAfterInteractions(() => {
+      setReady(true)
+      bottomOfset.value = withTiming(
+        visableRoutes.includes(pathName) ? 0 : Screens.height * 0.09,
+        { duration: 300 }
+      )
     })
-  }, [showTabBar])
+    return () => task.cancel()
+  }, [pathName])
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: bottomOfset.value }]
   }))
+
+  if (!ready) return null
 
   return (
     <Tabs

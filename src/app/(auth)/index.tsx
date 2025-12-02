@@ -13,13 +13,13 @@ import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
 import { BottomSheetModalMethods } from '@gorhom/bottom-sheet/lib/typescript/types'
 import { BlurView } from 'expo-blur'
 import { TextInput } from 'react-native-gesture-handler'
-import WelcomePageList from '@/widget/welcome/page-list'
-import WelcomeDoteBox from '@/widget/welcome/dote'
-import WelcomeButton from '@/widget/welcome/button'
-import { welcomeData } from '@/widget/welcome/data'
+import WelcomePageList from '@/widget/auth/welcome/page-list/index'
+import WelcomeDoteBox from '@/widget/auth/welcome/dote'
+import WelcomeButton from '@/widget/auth/welcome/button'
+import { welcomeData } from '@/widget/auth/welcome/data'
 import { AppRoutes } from '@/constants/routes'
 import { Screens } from '@/shared/tokens'
-import WelcomeBackgroundImage from '@/widget/welcome/welcomeBackgroundImage'
+import WelcomeBackgroundImage from '@/widget/auth/welcome/welcomeBackgroundImage'
 
 const LANGS = [
   { key: 'uz', label: "O'zbekcha (uz)" },
@@ -38,7 +38,7 @@ export default function WelcomePage () {
   const [page, setPage] = useState<number>(0)
   const ScrollX = useSharedValue(0)
   const sheetRef = useRef<BottomSheetModalMethods | null>(null)
-  
+
   const [selectedLang, setSelectedLang] = useState('uz')
   const [query, setQuery] = useState('')
   const snapPoints = useMemo(() => ['40%', '70%'], [])

@@ -37,7 +37,6 @@ export default function Auth () {
   const [registerValid, setRegisterValid] = useState(false)
   const isButtonActive = activePage === 0 ? loginValid : registerValid
   const [{ isLoading }] = useAtom(authStateAtom)
-  const [localLoading, setLocalLoading] = useState<boolean>(false)
 
   const pages = [
     {
@@ -87,18 +86,24 @@ export default function Auth () {
     return <View style={styles(Colors).page}>{item.component}</View>
   }
 
-  const handleSubmit = () => {
-    if (!isButtonActive || localLoading) return
-    setLocalLoading(true)
-    setTimeout(() => {
+  const handleSubmit = async () => {
+    if (!isButtonActive) return
+
+    try {
+      const delay = new Promise(resolve => setTimeout(resolve, 500))
+
       if (activePage === 0) {
-        loginSubmitRef.current?.()
+        await loginSubmitRef.current?.()
       } else {
-        registerSubmitRef.current?.()
+        await registerSubmitRef.current?.()
       }
-      setLocalLoading(false)
-    }, 500)
+
+      await delay
+    } catch (error) {
+      console.log(error)
+    }
   }
+
   const AuthTab = ({ goToPage, scrollX }: any) => {
     const Colors = useThemeColor()
     const insetTop = useSafeAreaInsets().top
@@ -189,10 +194,9 @@ export default function Auth () {
           onPress={handleSubmit}
           disabled={!isButtonActive}
           style={{
-            backgroundColor:
-              isButtonActive && !localLoading
-                ? Colors.primary
-                : Colors.Boxbackground04,
+            backgroundColor: isButtonActive
+              ? Colors.primary
+              : Colors.Boxbackground04,
             height: 55,
             width: Screens.width - Spacing.horizontal * 2,
             borderRadius: 20,
@@ -201,8 +205,8 @@ export default function Auth () {
           }}
         >
           <AppText variant='semiBold' style={{ fontSize: 18, color: 'white' }}>
-            {localLoading || isLoading ? (
-              <ActivityIndicator size='large' color={Colors.primary} />
+            {isLoading ? (
+              <ActivityIndicator size='large' color='#fff' />
             ) : (
               'Yuborish'
             )}

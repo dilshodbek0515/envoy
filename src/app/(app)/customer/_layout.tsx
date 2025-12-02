@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Tabs, usePathname } from 'expo-router'
 import useThemeColor from '@/theme/useTheme'
 import { BottomTabBar } from '@react-navigation/bottom-tabs'
@@ -11,6 +11,7 @@ import { Screens } from '@/shared/tokens'
 import ProfileIcon from '@/assets/icons/profile-icon'
 import GetOrderIcon from '@/assets/icons/get-order-icon'
 import CustomerOrdersIcon from '@/assets/icons/customer-orders-icon'
+import { InteractionManager } from 'react-native'
 const CustomerLayout = () => {
   const pathName = usePathname()
   const Colors = useThemeColor()
@@ -19,7 +20,8 @@ const CustomerLayout = () => {
     () => [
       '/customer/customer-orders',
       '/customer/get-order',
-      '/customer/profile'
+      '/customer/profile',
+      '/customer/profile-test'
     ],
     [pathName]
   )
@@ -28,17 +30,25 @@ const CustomerLayout = () => {
     return visableRoutes.includes(pathName)
   }, [visableRoutes])
 
+  const [ready, setReady] = useState(false)
   const botomOfset = useSharedValue(showTabBar ? 0 : Screens.height * 0.09)
 
   useEffect(() => {
-    botomOfset.value = withTiming(showTabBar ? 0 : Screens.height * 0.09, {
-      duration: 300
+    const task = InteractionManager.runAfterInteractions(() => {
+      setReady(true)
+      botomOfset.value = withTiming(
+        visableRoutes.includes(pathName) ? 0 : Screens.height * 0.09,
+        { duration: 300 }
+      )
     })
-  }, [showTabBar])
+    return () => task.cancel()
+  }, [pathName])
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: botomOfset.value }]
   }))
+
+  if (!ready) return null
 
   return (
     <Tabs
@@ -83,6 +93,16 @@ const CustomerLayout = () => {
         name='profile'
         options={{
           title: 'Profile',
+          tabBarIcon: ({ focused, color, size }) => {
+            return <ProfileIcon size={size} color={color} />
+          }
+        }}
+      />
+
+      <Tabs.Screen
+        name='profile-test'
+        options={{
+          title: 'Profile-test',
           tabBarIcon: ({ focused, color, size }) => {
             return <ProfileIcon size={size} color={color} />
           }

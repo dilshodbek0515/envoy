@@ -1,10 +1,10 @@
 import { FlatList, Image, ImageSourcePropType, Text, View } from 'react-native'
 import Animated, { useAnimatedScrollHandler } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { welcomeStyle } from '../../style'
+import { welcomeStyle } from '../../../style'
 import { RefObject, useRef } from 'react'
 import { welcomeData } from '../data'
-import { Spacing } from '../../../shared/tokens'
+import { Spacing } from '../../../../shared/tokens'
 
 interface Idata {
   id: number

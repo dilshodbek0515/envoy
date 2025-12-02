@@ -33,11 +33,9 @@ import EditIcons from '@/assets/icons/edit-icon'
 import CameraIcon from '@/assets/icons/camera-icon'
 import GalleriyaIcon from '@/assets/icons/gallerya-icon'
 import CommentIcon from '@/assets/icons/comment-icon'
-import {
-  BottomSheetBackdrop,
-  BottomSheetView,
-  BottomSheetModalMethods
-} from '@gorhom/bottom-sheet'
+import { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet'
+import CopyIcon from '@/assets/icons/copy-icon'
+import { BottomSheetModalMethods } from '@gorhom/bottom-sheet/lib/typescript/types'
 
 const User = () => {
   const Colors = useThemeColor()
@@ -261,14 +259,14 @@ const UserInfoRow = ({
           {label}
         </AppText>
 
-        {/* {!editMode &&
+        {!editMode &&
           (copy ? (
             <Feather name='check' size={20} color={Colors.primary} />
           ) : (
             <Pressable onPress={handleCopy}>
               <CopyIcon size={20} color={Colors.textSecondary} />
             </Pressable>
-          ))} */}
+          ))}
       </View>
 
       {!editMode ? (
@@ -437,7 +435,7 @@ const UserCommentRow = ({ comment }: { comment: string[] }) => {
         backgroundStyle={{ backgroundColor: Colors.pageBackground }}
       >
         <BottomSheetView style={{}}>
-          <AppText style={{}}>Salom Sheet Modal</AppText>
+          <AppText style={{}}>Sheet Modal</AppText>
         </BottomSheetView>
       </CustomBottomSheetModal>
     </Pressable>

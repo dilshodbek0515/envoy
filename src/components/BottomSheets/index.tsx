@@ -24,7 +24,7 @@ const CustomBottomSheetModal = forwardRef<BottomSheetModalMethods, Props>(
       children,
       backdropAppearIndex = 0,
       backdropDisappearIndex = -1,
-      backdropOpacity = 1,
+      backdropOpacity = 0.6,
       pressBehavior = 'close',
       insetsTopEnabled,
       ...props
@@ -32,7 +32,6 @@ const CustomBottomSheetModal = forwardRef<BottomSheetModalMethods, Props>(
     ref
   ) => {
     const Colors = useThemeColor()
-
     const renderBackDrop = useCallback(
       (backdropProps: BottomSheetBackdropProps) => (
         <BottomSheetBackdrop
@@ -41,7 +40,7 @@ const CustomBottomSheetModal = forwardRef<BottomSheetModalMethods, Props>(
           disappearsOnIndex={backdropDisappearIndex}
           pressBehavior={pressBehavior}
           opacity={backdropOpacity}
-        ></BottomSheetBackdrop>
+        />
       ),
       [
         backdropAppearIndex,
@@ -57,11 +56,14 @@ const CustomBottomSheetModal = forwardRef<BottomSheetModalMethods, Props>(
       <BottomSheetModal
         enableDynamicSizing={false}
         ref={ref}
-        backgroundComponent={renderBackDrop}
-        backgroundStyle={{ backgroundColor: Colors.pageBackground }}
+        backdropComponent={renderBackDrop}
+        backgroundStyle={{
+          backgroundColor: Colors.pageBackground,
+          borderRadius: 20
+        }}
         handleIndicatorStyle={{
           backgroundColor: Colors.textSecondary,
-          borderRadius: 20
+          borderRadius: 40
         }}
         {...props}
       >

@@ -1,12 +1,12 @@
 import { StyleSheet, View } from 'react-native'
-import { welcomeStyle } from '../style'
+import { welcomeStyle } from '../../style'
 import Animated, {
   Extrapolate,
   interpolate,
   interpolateColor,
   useAnimatedStyle
 } from 'react-native-reanimated'
-import { Colors, Screens } from '../../shared/tokens'
+import { Colors, Screens } from '../../../shared/tokens'
 import { welcomeData } from './data'
 export default function WelcomeDoteBox ({ ScrollX }: any) {
   return (

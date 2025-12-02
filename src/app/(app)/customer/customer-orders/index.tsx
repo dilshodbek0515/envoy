@@ -10,7 +10,7 @@ const CustomerOrders = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <PageHeader title='Customer Orders' />
+      <PageHeader title='Yuklaringiz' />
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <AppText onPress={handleLougout}>Customer</AppText>
       </View>

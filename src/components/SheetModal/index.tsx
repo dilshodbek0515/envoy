@@ -9,7 +9,6 @@ import Animated, {
   ZoomOut
 } from 'react-native-reanimated'
 import AppText from '../text'
-import AppButton from '../Button/Button'
 
 interface Props {
   open: boolean
@@ -64,10 +63,10 @@ const SheetModal = ({
   return (
     <CustomBottomSheetModal
       ref={modalRef}
-      snapPoint={snapPoint}
+      snapPoints={snapPoint}
       backgroundStyle={{ backgroundColor: 'transparent' }}
       handleIndicatorStyle={{ display: 'none' }}
-      enablePanDownToColse
+      enablePanDownToClose
       backdropOpacity={0.5}
       onDismiss={onDismiss}
     >

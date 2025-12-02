@@ -1,5 +1,5 @@
 import { Pressable, Text, View } from 'react-native'
-import { welcomeStyle as styles } from '../style'
+import { welcomeStyle as styles } from '@/widget/style'
 import Animated, {
   useAnimatedStyle,
   useSharedValue,

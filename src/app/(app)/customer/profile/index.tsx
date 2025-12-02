@@ -22,6 +22,7 @@ import SettingsIcon from '@/assets/icons/settings-icon'
 import RatingIcon from '@/assets/icons/rating-icon'
 import NotificationIcon from '@/assets/icons/notification.icon'
 import CallIcon from '@/assets/icons/call-icon'
+import { StatusBar } from 'expo-status-bar'
 
 const CustomerProfile = () => {
   const Colors = useThemeColor()
@@ -144,6 +145,7 @@ const CustomerProfile = () => {
         backgroundColor: Colors.pageBackground
       }}
     >
+      <StatusBar style='light' backgroundColor={Colors.Boxbackground} />
       <PageHeader title='Profile' />
       <View style={styles(Colors).container}>
         <ScrollView

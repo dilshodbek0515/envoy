@@ -11,11 +11,11 @@ import { Image, Pressable, StyleSheet, View } from 'react-native'
 
 export default function ProfileUserBox () {
   const Colors = useThemeColor()
-  const { username, phone, image: originalImage } = useAtomValue(userDataAtom)
+  const profile = useAtomValue(userDataAtom)
 
-  const urlImage = originalImage
-    ? process.env.EXPO_PUBLIC_PREFIX + originalImage
-    : originalImage
+  const urlImage = profile.image
+    ? process.env.EXPO_PUBLIC_PREFIX + profile.image
+    : null
 
   return (
     <Pressable
@@ -35,20 +35,23 @@ export default function ProfileUserBox () {
         }}
       >
         {urlImage ? (
-          <Image source={{ uri: urlImage }} style={{ flex: 1 }} />
+          <Image
+            source={{ uri: urlImage }}
+            style={{ width: '100%', height: '100%', borderRadius: 30 }}
+          />
         ) : (
           <AppText variant='bold' style={{ fontSize: 35 }}>
-            {username?.slice(0, 1)}
+            {profile.username?.slice(0, 1)}
           </AppText>
         )}
       </View>
 
       <View style={{ gap: Spacing.horizontal / 2 }}>
         <AppText variant='semiBold' style={{ fontSize: 18 }}>
-          {username}
+          {profile.username}
         </AppText>
         <AppText style={{ fontSize: 12, color: Colors.textSecondary }}>
-          {phone}
+          {profile.phone}
         </AppText>
       </View>
     </Pressable>

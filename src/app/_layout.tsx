@@ -1,10 +1,8 @@
 import i18n, { initLanguage } from '@/locales/_i18n'
-import { authAtom } from '@/service/user/register-login/controller'
 import useThemeColor from '@/theme/useTheme'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
-import { useAtomValue } from 'jotai'
 import { useEffect, useState } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import { View } from 'react-native'
@@ -13,8 +11,6 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 export default function RootLayout () {
   const Colors = useThemeColor()
   const [ready, setReady] = useState(false)
-  const { data } = useAtomValue(authAtom)
-  // console.log(data)
 
   useEffect(() => {
     const prepare = async () => {
@@ -51,7 +47,7 @@ export default function RootLayout () {
               backgroundColor: Colors.pageBackground
             }}
           >
-            <StatusBar style='light' />
+            <StatusBar style='light' backgroundColor={Colors.Boxbackground} />
             <Stack
               screenOptions={{
                 headerShown: false,

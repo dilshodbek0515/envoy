@@ -4,7 +4,7 @@ import Animated, {
   useAnimatedStyle
 } from 'react-native-reanimated'
 import { welcomeData } from './data'
-import { Screens } from '../../shared/tokens'
+import { Screens } from '../../../shared/tokens'
 
 export default function WelcomeBackgroundImage ({
   activePage,
