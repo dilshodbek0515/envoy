@@ -19,10 +19,6 @@ export const AppRoutes = {
       index: '(app)/customer/get-order/'
     },
 
-    test: {
-      index: '(app)/customer/profile-test/'
-    },
-
     profile: {
       index: '(app)/customer/profile/',
       notification: '(app)/customer/profile/notifications',
@@ -32,28 +28,12 @@ export const AppRoutes = {
       },
 
       setting: {
-        index: '(app)/customer/profile/setting/'
+        index: '(app)/customer/profile/setting/',
+        language: '(app)/customer/profile/setting/language/'
       },
 
       result: {
         index: '(app)/customer/profile/results/'
-      }
-    },
-
-    profileTest: {
-      index: '(app)/customer/profile-test/',
-      notification: '(app)/customer/profile-test/notification/',
-
-      user_test: {
-        index: '(app)/customer/profile-test/user-test/'
-      },
-
-      result_test: {
-        index: '(app)/customer/profile-test/result-test/'
-      },
-
-      settings_test: {
-        index: '(app)/customer/profile-test/settings-test/'
       }
     }
   },

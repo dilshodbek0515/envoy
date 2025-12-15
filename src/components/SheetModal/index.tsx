@@ -1,4 +1,4 @@
-import { Button, StyleSheet, View } from 'react-native'
+import { Button, Pressable, StyleSheet, View } from 'react-native'
 import React, { useEffect, useMemo, useRef } from 'react'
 import useThemeColor from '@/theme/useTheme'
 import CustomBottomSheetModal from '../BottomSheets'
@@ -88,17 +88,16 @@ const SheetModal = ({
           {type === 'ok' && <Button title={okText} onPress={handleOk} />}
           {type === 'yesno' && (
             <View style={styles.row}>
-              <Button
+              <Pressable
+                style={[styles.btn, styles.yesBtn]}
                 onPress={handleYes}
-                title={yesText}
-                // buttonStyle={{ flex: 1 }}
-              />
-              <Button
-                onPress={handleNo}
-                title={noText}
-                // variant='secondary'
-                // buttonStyle={{ flex: 1 }}
-              />
+              >
+                <AppText style={styles.btnText}>{yesText}</AppText>
+              </Pressable>
+
+              <Pressable style={[styles.btn, styles.noBtn]} onPress={handleNo}>
+                <AppText style={styles.btnText}>{noText}</AppText>
+              </Pressable>
             </View>
           )}
         </Animated.View>
@@ -134,19 +133,7 @@ const styles = StyleSheet.create({
     height: 55
   },
 
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 10,
-    flex: 1
-  },
-
   yseBtn: {
-    flex: 1,
-    borderRadius: 16
-  },
-
-  noBtn: {
     flex: 1,
     borderRadius: 16
   },
@@ -155,5 +142,34 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     width: '100%',
     backgroundColor: '#4a90e2'
+  },
+
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 12,
+    width: '100%'
+  },
+
+  btn: {
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+
+  yesBtn: {
+    backgroundColor: '#4CAF50' // Yashil (Ha)
+  },
+
+  noBtn: {
+    backgroundColor: '#E53935' // Qizil (Bekor qilish)
+  },
+
+  btnText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600'
   }
 })

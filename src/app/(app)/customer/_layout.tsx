@@ -20,8 +20,7 @@ const CustomerLayout = () => {
     () => [
       '/customer/customer-orders',
       '/customer/get-order',
-      '/customer/profile',
-      '/customer/profile-test'
+      '/customer/profile'
     ],
     [pathName]
   )
@@ -93,16 +92,6 @@ const CustomerLayout = () => {
         name='profile'
         options={{
           title: 'Profile',
-          tabBarIcon: ({ focused, color, size }) => {
-            return <ProfileIcon size={size} color={color} />
-          }
-        }}
-      />
-
-      <Tabs.Screen
-        name='profile-test'
-        options={{
-          title: 'Profile-test',
           tabBarIcon: ({ focused, color, size }) => {
             return <ProfileIcon size={size} color={color} />
           }

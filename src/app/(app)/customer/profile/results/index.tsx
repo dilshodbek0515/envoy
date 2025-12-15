@@ -1,10 +1,12 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, View } from 'react-native'
+import PageHeader from '@/components/header/PageHeader'
+import AppText from '@/components/text'
 
 const Results = () => {
   return (
-    <View>
-      <Text>Results</Text>
+    <View style={{ flex: 1 }}>
+      <PageHeader title='Notification' isEnabledBack />
+      <AppText>Results</AppText>
     </View>
   )
 }

@@ -20,7 +20,6 @@ import { themeAtom } from '@/theme/theme'
 import { logoutAtom } from '@/service/user/register-login/controller'
 import { router } from 'expo-router'
 import safeRoute from '@/utils/safeNavigate'
-import CopyIcon from '@/assets/icons/copy-icon'
 import { AppRoutes } from '@/constants/routes'
 import PageHeader from '@/components/header/PageHeader'
 import { Spacing } from '@/shared/tokens'
@@ -75,7 +74,7 @@ const Settings = () => {
         icon: (size: number, color: string) => (
           <LanguageIcon size={size} color={color} />
         ),
-        onPress: () => handleNavigate(AppRoutes.customer.profile.setting.index)
+        onPress: () => handleNavigate(AppRoutes.customer.profile.setting.language)
       },
       {
         id: 'logout',
