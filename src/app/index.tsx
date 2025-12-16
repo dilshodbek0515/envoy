@@ -49,7 +49,7 @@ const index = () => {
         let route = AppRoutes.auth.auth
 
         if (access && role === 'Customer')
-          route = AppRoutes.customer.getOrder.index
+          route = AppRoutes.customer.makeOrder.index
         else if (access && role === 'Driver')
           route = AppRoutes.driver.loads.index
         setNextRoute(route)

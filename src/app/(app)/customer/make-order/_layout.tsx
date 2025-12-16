@@ -1,9 +1,8 @@
-import { StyleSheet } from 'react-native'
 import React from 'react'
 import { Stack } from 'expo-router'
 import useThemeColor from '@/theme/useTheme'
 
-const CustomerGetOrdersLayout = () => {
+const MakeOrdersLayout = () => {
   const Colors = useThemeColor()
 
   return (
@@ -16,6 +15,4 @@ const CustomerGetOrdersLayout = () => {
   )
 }
 
-export default CustomerGetOrdersLayout
-
-const styles = StyleSheet.create({})
+export default MakeOrdersLayout

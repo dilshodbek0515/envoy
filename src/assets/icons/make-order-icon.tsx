@@ -6,7 +6,7 @@ interface SvgComponentProps {
   color?: string
 }
 
-const GetOrderIcon: React.FC<SvgComponentProps> = ({
+const MakeOrderIcon: React.FC<SvgComponentProps> = ({
   size = 24,
   color = '#222',
   ...props
@@ -19,4 +19,4 @@ const GetOrderIcon: React.FC<SvgComponentProps> = ({
   )
 }
 
-export default GetOrderIcon
+export default MakeOrderIcon

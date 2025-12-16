@@ -15,8 +15,14 @@ export const AppRoutes = {
   },
 
   customer: {
-    getOrder: {
-      index: '(app)/customer/get-order/'
+    makeOrder: {
+      index: '(app)/customer/make-order/',
+      location: '(app)/customer/make-order/location/',
+      cargo: '(app)/customer/make-order/cargo/',
+      time: '(app)/customer/make-order/time/',
+      price: '(app)/customer/make-order/price/',
+      comment: '(app)/customer/make-order/comment/',
+      truck: '(app)/customer/make-order/truck/'
     },
 
     profile: {

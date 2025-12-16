@@ -9,7 +9,7 @@ const CustomerOrdersLayout = () => {
   const visableRoutes = useMemo(
     () => [
       '/customer/customer-orders',
-      '/customer/get-order',
+      '/customer/make-order',
       '/customer/profile'
     ],
     [pathName]

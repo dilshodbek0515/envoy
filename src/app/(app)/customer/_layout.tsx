@@ -9,9 +9,9 @@ import Animated, {
 } from 'react-native-reanimated'
 import { Screens } from '@/shared/tokens'
 import ProfileIcon from '@/assets/icons/profile-icon'
-import GetOrderIcon from '@/assets/icons/get-order-icon'
 import CustomerOrdersIcon from '@/assets/icons/customer-orders-icon'
 import { InteractionManager } from 'react-native'
+import MakeOrderIcon from '@/assets/icons/make-order-icon'
 const CustomerLayout = () => {
   const pathName = usePathname()
   const Colors = useThemeColor()
@@ -19,7 +19,7 @@ const CustomerLayout = () => {
   const visableRoutes = useMemo(
     () => [
       '/customer/customer-orders',
-      '/customer/get-order',
+      '/customer/make-order',
       '/customer/profile'
     ],
     [pathName]
@@ -56,7 +56,7 @@ const CustomerLayout = () => {
           <BottomTabBar {...props} />
         </Animated.View>
       )}
-      initialRouteName='get-order'
+      initialRouteName='make-order'
       screenOptions={{
         tabBarLabelStyle: { fontSize: 12 },
         headerShown: false,
@@ -80,11 +80,11 @@ const CustomerLayout = () => {
         }}
       />
       <Tabs.Screen
-        name='get-order'
+        name='make-order'
         options={{
           title: 'Buyurtma berish',
           tabBarIcon: ({ focused, color, size }) => {
-            return <GetOrderIcon size={size} color={color} />
+            return <MakeOrderIcon size={size} color={color} />
           }
         }}
       />
