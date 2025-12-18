@@ -1,7 +1,5 @@
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native'
 import React from 'react'
-import { useSetAtom } from 'jotai'
-import { logoutAtom } from '@/service/user/register-login/controller'
 import PageHeader from '@/components/header/PageHeader'
 import { AppRoutes } from '@/constants/routes'
 import AppText from '@/components/text'
@@ -11,12 +9,9 @@ import { Screens, Spacing } from '@/shared/tokens'
 import useThemeColor from '@/theme/useTheme'
 
 const MakeOrderPage = () => {
-  const handleLougout = useSetAtom(logoutAtom)
-
   return (
     <View style={{ flex: 1 }}>
       <PageHeader title='Buyurtma berish' />
-
       <MakeOrederButtons />
     </View>
   )
@@ -77,8 +72,9 @@ const MakeOrederButtons = () => {
               flex: 1,
               backgroundColor: Colors.Boxbackground,
               borderRadius: 20,
-              padding: Spacing.horizontal
-              // height: Screens.height * 0.12
+              padding: Spacing.horizontal,
+              justifyContent: 'center',
+              paddingHorizontal: Spacing.horizontal
             }}
           >
             <AppText>{button.title}</AppText>

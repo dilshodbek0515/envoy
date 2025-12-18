@@ -7,7 +7,7 @@ const LANGUAGE_KEY = 'appLanguage'
 
 // # Tarjimalarni dynamic import qilish
 const languageResources: Record<string, () => Promise<any>> = {
-  uzbekistan: () => import('./uzbekistan.json')
+  uzbekistan: () => import('./uzbekistan.json') 
 }
 
 // # i18n basic sozlamalari:

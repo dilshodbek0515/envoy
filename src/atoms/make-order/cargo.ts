@@ -1,14 +1,11 @@
-import { atom } from 'jotai'
 import { CargoType } from '@/shared/validation/make-order/cargo-schema'
-import { TCargo } from '@/types/order'
+import { atom } from 'jotai'
 
-// Cargo uchun atom
-export const getOrderCargoAtom = atom<TCargo>({
+export const getOrderCargoAtom = atom({
   type: { value: '', unit: null }
 })
 
 export const normalizeCargoData = (data: CargoType) => {
-  // Bo'sh qiymatlarni olib tashlash
   const filteredData = Object.fromEntries(
     Object.entries(data).filter(([key, field]) => {
       if (key === 'type') {
@@ -21,8 +18,9 @@ export const normalizeCargoData = (data: CargoType) => {
   const normalizedData = Object.fromEntries(
     Object.entries(filteredData).map(([key, field]) => {
       if (key === 'type') {
-        return [key, field] // string saqlanadi
+        return [key, field]
       }
+
       return [key, { ...field, value: Number(field.value) || 0 }]
     })
   )

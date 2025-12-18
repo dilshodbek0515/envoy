@@ -1,3 +1,5 @@
+import { themeAtom } from '@/theme/theme'
+import { useAtomValue } from 'jotai'
 import { Dimensions } from 'react-native'
 
 export const Screens = Dimensions.get('screen')
@@ -27,4 +29,16 @@ export const Fonts = {
   medium: 'Inter-Medium',
   semiBold: 'Inter-SemiBold',
   bold: 'Inter-Bold'
+}
+
+export const useAndroidRipple = (color?: string) => {
+  const theme = useAtomValue(themeAtom)
+  const localColor = theme === 'dark' ? '#00BEFF33' : '#0001'
+
+  return {
+    color: color || localColor,
+    borderless: false,
+    radius: -0.5,
+    foreground: true
+  }
 }

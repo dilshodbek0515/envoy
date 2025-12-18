@@ -24,7 +24,7 @@
     "expo-haptics": "~15.0.8",
     "expo-image-picker": "~17.0.10",
     "expo-linking": "~8.0.10",
-    "expo-router": "~6.0.19",
+    "expo-router": "~6.0.20",
     "expo-status-bar": "~3.0.9",
     "i18next": "^25.6.3",
     "jotai": "^2.15.0",
