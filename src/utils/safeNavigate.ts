@@ -1,6 +1,6 @@
 let safe = false
 
-const safeRoute = (handleRoute: () => void, delay?: 200) => {
+const safeRoute = (handleRoute: () => void, delay?: 100000) => {
   if (safe === true) return
   safe = true
   handleRoute()

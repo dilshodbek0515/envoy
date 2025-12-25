@@ -1,11 +1,11 @@
-import { CargoType } from '@/shared/validation/make-order/cargo-schema'
+import { TCargoSchema } from '@/shared/validation/make-order/cargo-schema'
 import { atom } from 'jotai'
 
 export const getOrderCargoAtom = atom({
   type: { value: '', unit: null }
 })
 
-export const normalizeCargoData = (data: CargoType) => {
+export const normalizeCargoData = (data: TCargoSchema) => {
   const filteredData = Object.fromEntries(
     Object.entries(data).filter(([key, field]) => {
       if (key === 'type') {

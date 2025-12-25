@@ -1,7 +1,6 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import useThemeColor from '@/theme/useTheme'
 import StarIcon from '@/assets/icons/star'
+import useThemeColor from '@/theme/useTheme'
+import { View, StyleSheet } from 'react-native'
 
 interface RatingStarsProps {
   rating: number
@@ -31,11 +30,10 @@ const RatingStars = ({
   for (let i = 1; i <= max; i++) {
     if (i <= Math.floor(rating)) {
       stars.push(<StarIcon key={i} size={size} color={activeColor} />)
-    } else if (i === Math.floor(rating) + 1 && rating % 1 >= 0.5) {
+    } else if (i == Math.floor(rating) + 1 && rating % 1 >= 0.5) {
       stars.push(
         <View key={i} style={{ width: size, height: size }}>
           <StarIcon size={size} color={inactiveColor} />
-
           <View
             style={{
               position: 'absolute',
@@ -43,7 +41,7 @@ const RatingStars = ({
               overflow: 'hidden'
             }}
           >
-            <StarIcon size={size} color={inactiveColor} />
+            <StarIcon size={size} color={activeColor} />
           </View>
         </View>
       )
@@ -51,6 +49,7 @@ const RatingStars = ({
       stars.push(<StarIcon key={i} size={size} color={inactiveColor} />)
     }
   }
+
   return <View style={styles.row}>{stars}</View>
 }
 

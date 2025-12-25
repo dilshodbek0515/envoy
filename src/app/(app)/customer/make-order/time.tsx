@@ -27,7 +27,7 @@ const Time = () => {
         }
       />
       <MakeOrderNavigationButtons
-        firstTitle='Manzil'
+        firstTitle='Narx'
         secondTitle='Izoh'
         secondPath={AppRoutes.customer.makeOrder.comment}
       />

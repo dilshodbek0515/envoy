@@ -67,7 +67,8 @@ const CustomerLayout = () => {
           borderTopWidth: 0,
           height: Screens.height * 0.09,
           position: 'absolute'
-        }
+        },
+        sceneStyle: { backgroundColor: Colors.pageBackground }
       }}
     >
       <Tabs.Screen

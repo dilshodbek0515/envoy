@@ -5,7 +5,7 @@ type TCargoField<T> = {
 
 // Cargo tipi
 export type TCargo = {
-  type: TCargoField<string> // faqat string bo‘ladi
+  type: TCargoField<string>
   weight?: TCargoField<number>
   volume?: TCargoField<number>
   quantity?: TCargoField<number>

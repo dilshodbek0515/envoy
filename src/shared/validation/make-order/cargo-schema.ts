@@ -31,7 +31,11 @@ export const cargoSchema = z.object({
   volume: z.object({
     value: z.string().optional(),
     unit: z.string()
+  }),
+  price: z.object({
+    value: z.string().optional(),
+    unit: z.string()
   })
 })
 
-export type CargoType = z.infer<typeof cargoSchema>
+export type TCargoSchema = z.infer<typeof cargoSchema>

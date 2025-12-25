@@ -38,7 +38,7 @@ export default function RootLayout () {
 
   return (
     <I18nextProvider i18n={i18n}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
+      <GestureHandlerRootView style={{ flex: 1, backgroundColor:'red' }}>
         <BottomSheetModalProvider>
           <View
             style={{
