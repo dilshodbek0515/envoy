@@ -31,10 +31,6 @@ export const cargoSchema = z.object({
   volume: z.object({
     value: z.string().optional(),
     unit: z.string()
-  }),
-  price: z.object({
-    value: z.string().optional(),
-    unit: z.string()
   })
 })
 

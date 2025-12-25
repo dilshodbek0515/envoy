@@ -11,17 +11,23 @@ import {
   cargoSchema,
   TCargoSchema
 } from '@/shared/validation/make-order/cargo-schema'
-import { useAtom } from 'jotai'
+import { useAtom, useAtomValue } from 'jotai'
 import safeRoute from '@/utils/safeNavigate'
-import { getOrderCargoAtom, normalizeCargoData } from '@/atoms/make-order/cargo'
+import { getOrderCargoAtom } from '@/atoms/make-order/cargo'
 import AppText from '@/components/text'
 import DefualtButton from '@/components/Button/DefualtButton'
 import { TUnit } from '@/constants/units'
-import { TCargo } from '@/types/order'
-const cargo = () => {
+import ErrorText from '@/components/errorText'
+import useThemeColor from '@/theme/useTheme'
+import { themeAtom } from '@/theme/theme'
+import { vibration } from '@/utils/haptics'
+import { useState } from 'react'
+const Cargo = () => {
   return (
     <Pressable onPress={() => Keyboard.dismiss()} style={{ flex: 1 }}>
       <PageHeader
+        hide
+        animated
         title='Yuk'
         isEnabledBack
         onLeftPress={() =>
@@ -38,40 +44,41 @@ const cargo = () => {
   )
 }
 
-export default cargo
+export default Cargo
+
+const defaultValues = {
+  type: { value: '', unit: '' },
+  weight: { value: '', unit: 'kg' },
+  volume: { value: '', unit: 'm³' },
+  quantity: { value: '', unit: 'dona' },
+  length: { value: '', unit: 'm' },
+  height: { value: '', unit: 'm' },
+  width: { value: '', unit: 'm' }
+}
 
 const Form = () => {
-  const [cargo, setCargo] = useAtom(getOrderCargoAtom)
+  const [cargoData, setCargoData] = useAtom(getOrderCargoAtom)
+  const [isChange, setIsChange] = useState(false)
+
+  const Colors = useThemeColor()
+  const theme = useAtomValue(themeAtom)
   const {
     handleSubmit,
     control,
     reset,
-    watch,
-    formState: { errors }
+    formState: { errors, isValid, isDirty }
   } = useForm<TCargoSchema>({
     resolver: zodResolver(cargoSchema),
-    defaultValues: {
-      type: { value: '', unit: null },
-      weight: { value: '', unit: 'kg' },
-      volume: { value: '', unit: 'm³' },
-      quantity: { value: '', unit: 'dona' },
-      length: { value: '', unit: 'm' },
-      height: { value: '', unit: 'm' },
-      width: { value: '', unit: 'm' }
-    }
+    defaultValues: cargoData
   })
 
-  const watches = watch()
-
-  const onSave = () => {
-    setCargo({
-      type: { value: watches.type.value, unit: null }
-    })
-  }
   const onSubmit = (data: any) => {
-    console.log(data)
-    console.log('awdawdawda')
+    setCargoData(data)
+    setIsChange(false)
   }
+  
+  console.log(cargoData)
+  console.log(isChange)
 
   const renderInput = (name: TUnit, label: string) => {
     return (
@@ -82,8 +89,12 @@ const Form = () => {
           <UnitInput
             label={label}
             value={value?.value}
-            onChangeText={text => onChange({ ...value, value: text })}
-            onChangeUnit={unit => onChange({ ...value, unit })}
+            onChangeText={text => {
+              onChange({ ...value, value: text }), setIsChange(true)
+            }}
+            onChangeUnit={unit => {
+              onChange({ ...value, unit }), setIsChange(true)
+            }}
             unitTypes={name}
             unit={value?.unit || null}
             keyboardType={name === 'type' ? 'default' : 'numeric'}
@@ -92,6 +103,14 @@ const Form = () => {
         )}
       />
     )
+  }
+
+  const handleClear = () => {
+    reset(defaultValues)
+    vibration.heavy()
+    Keyboard.dismiss()
+    setIsChange(true)
+    setCargoData(defaultValues)
   }
 
   return (
@@ -103,6 +122,13 @@ const Form = () => {
       }}
     >
       {renderInput('type', 'Yuk turi')}
+
+      {errors.type?.value?.message && (
+        <ErrorText
+          error={errors.type?.value?.message ?? ''}
+          isVisable={errors.type?.value?.message}
+        />
+      )}
       <View style={{ flexDirection: 'row', gap: Spacing.horizontal }}>
         <View style={{ flex: 1 }}>{renderInput('weight', 'Vazni')}</View>
         <View style={{ flex: 1 }}>{renderInput('volume', 'Hajmi')}</View>
@@ -116,9 +142,51 @@ const Form = () => {
         <View style={{ flex: 1 }}>{renderInput('width', 'Eni')}</View>
       </View>
 
-      <DefualtButton onPress={onSave}>
-        <AppText>Saqlash</AppText>
-      </DefualtButton>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          overflow: 'hidden'
+        }}
+      >
+        <DefualtButton
+          onPress={handleClear}
+          disabled={!isDirty}
+          style={{
+            backgroundColor: isDirty ? Colors.red02 : Colors.Boxbackground,
+            borderRadius: 10,
+            paddingHorizontal: 10,
+            paddingVertical: 8
+          }}
+        >
+          <AppText
+            style={{
+              color: isDirty ? Colors.textPrimary : Colors.textSecondary
+            }}
+          >
+            Tozalash
+          </AppText>
+        </DefualtButton>
+
+        <DefualtButton
+          disabled={!isChange}
+          onPress={handleSubmit(onSubmit)}
+          style={{
+            backgroundColor: isChange ? Colors.green02 : Colors.Boxbackground,
+            borderRadius: 10,
+            paddingHorizontal: 10,
+            paddingVertical: 8
+          }}
+        >
+          <AppText
+            style={{
+              color: isChange ? Colors.textPrimary : Colors.textSecondary
+            }}
+          >
+            Saqlash
+          </AppText>
+        </DefualtButton>
+      </View>
     </View>
   )
 }

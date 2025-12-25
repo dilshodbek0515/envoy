@@ -1,17 +1,17 @@
 type TCargoField<T> = {
-  unit: string | null
-  value: T | null
+  unit: string
+  value: T | ''
 }
 
 // Cargo tipi
 export type TCargo = {
   type: TCargoField<string>
-  weight?: TCargoField<number>
-  volume?: TCargoField<number>
-  quantity?: TCargoField<number>
-  length?: TCargoField<number>
-  height?: TCargoField<number>
-  width?: TCargoField<number>
+  weight?: TCargoField<string>
+  volume?: TCargoField<string>
+  quantity?: TCargoField<string>
+  length?: TCargoField<string>
+  height?: TCargoField<string>
+  width?: TCargoField<string>
 }
 
 export type TComment = string | null

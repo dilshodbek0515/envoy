@@ -6,7 +6,6 @@ export type TUnit =
   | 'quantity'
   | 'volume'
   | 'type'
-  | 'price'
 
 type TUnitOption = {
   name: string
@@ -43,10 +42,11 @@ export const UNIT_OPTIONS = (): Record<TUnit, TUnitOption[]> => ({
     { name: 'litr', shortName: 'l' },
     { name: 'Kub metr', shortName: 'm3' }
   ],
-  type: [],
-  price: [
-    { name: "so'm", shortName: 'UZS' },
-    { name: 'dollar', shortName: 'USD' },
-    { name: 'rubl', shortName: 'RUB' }
-  ]
+  type: []
 })
+
+export const PRICE_UNIT: TUnitOption[] = [
+  { name: "so'm", shortName: 'UZS' },
+  { name: 'dollar', shortName: 'USD' },
+  { name: 'rubl', shortName: 'RUB' }
+]

@@ -19,7 +19,6 @@ import { Spacing } from '@/shared/tokens'
 import { vibration } from '@/utils/haptics'
 import DefualtButton from '../Button/DefualtButton'
 import AppText from '../text'
-import ErrorText from '../errorText'
 import CustomBottomSheetModal from '../BottomSheets'
 import { TUnit, UNIT_OPTIONS } from '@/constants/units'
 
@@ -48,8 +47,9 @@ const UnitInput: React.FC<TUnitInput> = ({
 
   const labelAnimatedStyle = useAnimatedStyle(() => ({
     top: interpolate(labelAnimation.value, [0, 1], [17, -9.5]),
+    fontSize: interpolate(labelAnimation.value, [0, 1], [16, 12]),
     color: interpolateColor(
-      labelAnimation.value,
+      inputFocus ? 1 : 0,
       [0, 1],
       [Colors.textSecondary, Colors.primary]
     )
@@ -58,11 +58,11 @@ const UnitInput: React.FC<TUnitInput> = ({
   useEffect(() => {
     let show = inputFocus || value?.length
     labelAnimation.value = withTiming(show ? 1 : 0, { duration: 200 })
-  }, [inputFocus])
+  }, [inputFocus, value])
 
   const containerAnimatedStyle = useAnimatedStyle(() => ({
     borderColor: interpolateColor(
-      labelAnimation.value,
+      inputFocus ? 1 : 0,
       [0, 1],
       [Colors.borderColor, Colors.primary]
     )
@@ -90,6 +90,7 @@ const UnitInput: React.FC<TUnitInput> = ({
         {...props}
         ref={inputRef}
         style={styles.input}
+        value={value}
         onFocus={() => setInputFocus(true)}
         onBlur={() => setInputFocus(false)}
       />
@@ -118,8 +119,6 @@ const UnitInput: React.FC<TUnitInput> = ({
         unit={unit}
         onChangeUnit={onChangeUnit}
       />
-
-      <ErrorText error={error ?? ''} isVisable={error} />
     </Animated.View>
   )
 }

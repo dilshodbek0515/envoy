@@ -1,12 +1,16 @@
-import { Platform, Pressable, StyleSheet, Text, View } from 'react-native'
-import React, { ReactNode } from 'react'
+import { Keyboard, Platform, Pressable, View } from 'react-native'
+import { ReactNode, useEffect } from 'react'
 import useThemeColor from '@/theme/useTheme'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Screens, Spacing } from '@/shared/tokens'
 import AppText from '../text'
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6'
 import { router } from 'expo-router'
 import ArrowIcon from '@/assets/icons/arrow-icon'
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming
+} from 'react-native-reanimated'
 
 interface IProps {
   title: string
@@ -14,13 +18,18 @@ interface IProps {
   onLeftPress?: () => void
   onRightPress?: () => void
   rightView?: ReactNode
+  hide?: boolean
+  animated?: boolean
 }
+
 const PageHeader = ({
   title = 'Header',
   isEnabledBack,
   rightView,
   onLeftPress,
-  onRightPress
+  onRightPress,
+  hide,
+  animated = false
 }: IProps) => {
   const Colors = useThemeColor()
   const Topinset = useSafeAreaInsets().top
@@ -40,16 +49,54 @@ const PageHeader = ({
     }
   }
 
+  const translateY = useSharedValue(0)
+  const paddingTop = useSharedValue(0)
+  const duration = 300
+
+  useEffect(() => {
+    if (hide) {
+      translateY.value = withTiming(-(Topinset + height), { duration })
+      paddingTop.value = withTiming(-height, { duration })
+    } else {
+      translateY.value = withTiming(0, { duration })
+      paddingTop.value = withTiming(0, { duration })
+    }
+  }, [hide])
+
+  const headerStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: translateY.value }],
+    marginBottom: paddingTop.value
+  }))
+
+  useEffect(() => {
+    const showSub = Keyboard.addListener('keyboardDidShow', () => {
+      translateY.value = withTiming(-(Topinset + height), { duration })
+      paddingTop.value = withTiming(-height, { duration })
+    })
+    const hideSub = Keyboard.addListener('keyboardDidShow', () => {
+      translateY.value = withTiming(0, { duration })
+      paddingTop.value = withTiming(0, { duration })
+    })
+
+    return () => {
+      showSub.remove()
+      hideSub.remove()
+    }
+  }, [Topinset, hide])
+
   return (
-    <View
-      style={{
-        backgroundColor: Colors.Boxbackground,
-        height: Topinset + height,
-        borderBottomLeftRadius: 7,
-        borderBottomRightRadius: 7,
-        justifyContent: 'flex-end',
-        alignItems: 'center'
-      }}
+    <Animated.View
+      style={[
+        {
+          backgroundColor: Colors.Boxbackground,
+          height: Topinset + height,
+          borderBottomLeftRadius: 7,
+          borderBottomRightRadius: 7,
+          justifyContent: 'flex-end',
+          alignItems: 'center'
+        },
+        animated && headerStyle
+      ]}
     >
       <View
         style={{
@@ -100,10 +147,8 @@ const PageHeader = ({
           {rightView}
         </Pressable>
       )}
-    </View>
+    </Animated.View>
   )
 }
 
 export default PageHeader
-
-const styles = StyleSheet.create({})
